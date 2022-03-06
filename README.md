@@ -12,6 +12,8 @@
 - [Explicación del Caso de Uso](#explicación-del-caso-de-uso)
 - [Ciclo de Vida de las Solicitudes HTTP en nuestra API](#ciclo-de-vida-de-las-solicitudes-http-en-nuestra-api)
 - [Requisitos](#requisitos)
+  - [Super Importante](#super-importante)
+  - [Recomendado](#recomendado)
 - [Episodios](#episodios)
 - [Stack](#stack)
 - [Estructura del Proyecto](#estructura-del-proyecto)
@@ -43,10 +45,17 @@ Cada vez que un usuario realiza una petición por ejemplo a *http://localhost:30
 ## Requisitos
 
 Antes de empezar revisa ue cumplas con los siguientes requisitos:
+### Super Importante
 
 - [Node.js](https://nodejs.org/) puede ser la version LTS o la actual
 - [Git](https://git-scm.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
+- Acceso a una base de datos MongoDB en caso de que no tengas una, [este link te ayudará a crearla en Atlas o Docker](https://github.com/jriverox/data-sample-resources#mongodb)
+- Cargar la data de ejemplo en tu base de datos MongoDB
+  - [Descarga el json con la data de ejemplo](https://github.com/jriverox/data-sample-resources#contactos-esquema-demo)
+  - [Carga la data del json en una BD usando Compass](https://github.com/jriverox/data-sample-resources#usando-compass)
+### Recomendado
+
 - Extensión de VS Code [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 - Extensión de VS Code [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - Extensión de VS Code [Path Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
@@ -84,7 +93,7 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
 ## Estructura del Proyecto
 
 ```
-|-- api-rest-nodejs-workshop
+|-- api-node-koa-workshop
     |-- .editorconfig
     |-- .eslintignore
     |-- .eslintrc.yml

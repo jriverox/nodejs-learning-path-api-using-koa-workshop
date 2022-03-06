@@ -1,0 +1,33 @@
+{
+  "name": "nodejs-learning-path-api-using-koa-workshop",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\">Workshop contruyendo una API Rest con Node.js + Koa.js</h1>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop/issues"
+  },
+  "homepage": "https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop#readme",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.1.1",
+    "mongoose": "^6.2.4",
+    "yenv": "^3.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
