@@ -118,14 +118,3 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
         |   |-- person.schema.js
         |-- utils
 ```
-- [Tabla de Contenido](#tabla-de-contenido)
-- [Acerca de](#acerca-de)
-- [Introducción](#introducción)
-- [Explicación del Caso de Uso](#explicación-del-caso-de-uso)
-- [Ciclo de Vida de las Solicitudes HTTP en nuestra API](#ciclo-de-vida-de-las-solicitudes-http-en-nuestra-api)
-- [Requisitos](#requisitos)
-  - [Super Importante](#super-importante)
-  - [Recomendado](#recomendado)
-- [Episodios](#episodios)
-- [Stack](#stack)
-- [Estructura del Proyecto](#estructura-del-proyecto)
