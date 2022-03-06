@@ -26,7 +26,7 @@ En este Workshop está dirigido a desarrolladores que quieren aprender como cons
 
 Por si aun no conoces Koa.js, te cuento que se trata de un web framework es decir es una alternativa mas ligera a Express.js (incluso construido por el mismo team de Express).
 
-Dividiremos este taller en **3 partes** que llamaremos Episodios, en cada uno agregaremos algún complemento que nos ayudará a entender cómo nuestra API irá evolucionando con el fin de añadirle funcionalidades técnicas que vas a necesitar en el mundo real.
+Dividiremos este taller en **4 partes** que llamaremos Episodios, en cada uno agregaremos algún complemento que nos ayudará a entender cómo nuestra API irá evolucionando con el fin de añadirle funcionalidades técnicas que vas a necesitar en el mundo real.
 
 Quieres saber el contenido de los epidosdios? ve a la sección [Episodios](#episodios)
 
@@ -61,9 +61,10 @@ Antes de empezar revisa ue cumplas con los siguientes requisitos:
 Como se mencionó anterioremente la idea es implementar una API Rest para cubrir las necesidades de indicadas en el Caso de Uso. Pero la idea es ofrecer varios enfoques:
 
 - [Episodio 1: Creando mi primera API rest en Node.js y MongoDB](./documentation/episode-1.md)
-- [Episodio 2: Implementando validaciones de request y mejores prácticas de manejo de errores](./documentation/episode-2.md)
-- [Episodio 3: Documentando con Open API (conocido como Swagger)](./documentation/episode-3.md)
-- [Episodio 4: Implementando Unit Tests](./documentation/episode-4.md)
+- [Episodio 2: Protegiendo el acceso del API](./documentation/episode-2.md)
+- [Episodio 3: Implementando validaciones de request y mejores prácticas de manejo de errores](./documentation/episode-3.md)
+- [Episodio 4: Documentando con Open API (conocido como Swagger)](./documentation/episode-4.md)
+- [Episodio 5: Implementando Unit Tests](./documentation/episode-5.md)
 
 ## Stack
 
