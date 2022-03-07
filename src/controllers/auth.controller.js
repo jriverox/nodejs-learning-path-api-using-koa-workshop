@@ -1,5 +1,9 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const yenv = require('yenv');
 const userModel = require('../models/user.model');
+
+const env = yenv();
 
 module.exports.signUp = async (ctx) => {
   const { username, password } = ctx.request.body;
@@ -20,7 +24,16 @@ module.exports.signIn = async (ctx) => {
   const user = await userModel.findOne({ username });
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    ctx.response.status = 204;
+    const token = jwt.sign(
+      // eslint-disable-next-line no-underscore-dangle
+      { user_id: user._id, username: user.username },
+      env.TOKEN_KEY,
+      { expiresIn: '2h' }
+    );
+
+    const expirationDate = new Date();
+    expirationDate.setHours( expirationDate.getHours() + 2 );
+    ctx.body = { access_token: token, token_expires: expirationDate };
   } else {
     ctx.throw(422, 'Usuario o password incorectos');
   }
