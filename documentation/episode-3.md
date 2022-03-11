@@ -1,8 +1,8 @@
 # Episodio 3: Implementando validaciones a los requests
 
-La idea de este episodio es implementar un mecanismo de validación para los endpoints ***GET /contacts/:index*** que llama a contacts.controller.getByIndex para obtener un contacto por el Id y para el ***POST /contacts*** que invoca al contacts.controller.save para crear y/o a actualizar un contacto.
+La idea de este episodio es implementar un mecanismo de validación para los endpoints ***GET /contacts/:index*** que llama a contacts.controller.getByIndex para obtener un contacto por el campo index y para el ***POST /contacts*** que invoca al contacts.controller.save para crear y/o a actualizar un contacto.
 
-Tal vez laprimera idea que pudieras pensar es implementar las validaciones con if, pero aqui es donde joi nos aporta algo ineteresante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
+Tal vez lo primero que pudieras pensar es implementar las validaciones con *if*, pero aqui es donde ***joi*** nos aporta algo ineteresante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
 
 ## Pasos para implementar
 
@@ -12,7 +12,7 @@ Tal vez laprimera idea que pudieras pensar es implementar las validaciones con i
 npm i joi
 ```
 
-2. Creamos el archivo ****schema-validator.js**** dentro de la carpeta ***middleware***.
+2. Creamos el archivo ***schema-validator.js*** dentro de la carpeta ***middleware***.
 
 ```javascript
 /**
@@ -57,7 +57,7 @@ const validateSchema = (schema) => (ctx, next) => {
 module.exports = validateSchema;
 ```
 
-:eight_spoked_asterisk: Nota: Recuerda que un middleware es en resumen una funcion que se ejecutará antes de la función final. En el episodio 2 creamos uno llamado auth.js con el fin de validar el token. En este paso estamos creando unp que servirá para validar si los datos enviados en el request coinciden con el formato esperado.
+:eight_spoked_asterisk: Nota: Recuerda que un middleware es en resumen una funcion que se ejecutará antes de la función del controller. En el episodio 2 creamos uno llamado auth.js con el fin de validar el token. En este paso estamos creando uno que servirá para validar si los datos enviados en el request coinciden con el formato esperado. Por ejemplo queremos que en el Post al intentar guardar un contacto tenga los campos minimos requeridos y que los campos tengas el tipo de datos y formatos y longitudes minimas definidas por nosotros.
 
 3. Ahora creamos la carpeta ***schemas*** dentro de src
 
@@ -102,23 +102,23 @@ const KoaRouter = require('koa-router');
 
 const router = new KoaRouter({ prefix: '/contacts' });
 const { getByIndex, save } = require('../controllers/contacts.controller');
-// codigo agregado en este paso. Importamos la funcion que hará de middleware
+
 const { verifyToken } = require('../middleware/auth');
-
+// codigo agregado en este paso. Importamos la funcion que hará de middleware para validar los esquemas
 const validateSchema = require('../middleware/schema-validator');
-
+// codigo agregado en este paso. Importamos los 2 esquemas que hemos creados para los 2 endpoints de contacts
 const { byIndexSchema, postSchema } = require('../schemas/contacts.schema');
-// codigo agregado en este paso: creamos una instancia del validador pasandole la parte del request que queremos validar en este caso (params) y el esquema apropiado
+// codigo agregado en este paso: creamos una instancia del validador pasandole la parte del request que queremos validar en este caso (params) y el esquema apropiado. Recuerda que depende de la necesidad eso que aqui llamamos la parte de con contexto es en realidad donde vienen los datos en el request, por ejemplo: params, query (query string), body, header.
 const byIndexValidator = validateSchema({ params: byIndexSchema });
 // codigo agregado en este paso: creamos una instancia del validador pasandole la parte del request que queremos validar en este caso (body) y el esquema apropiado
 const postValidator = validateSchema({ body: postSchema });
 // codigo agregado en este paso: agregar byIndexValidator despues antes de llamar a la funcion del controller.
-// colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
+// colocamos la funcion verifyToken para que se ejecute en cada request antes de invocar a la funcion del controllador
 // GET /contacts/29
 router.get('/byIndex', '/:index', verifyToken, byIndexValidator, getByIndex);
 
 // codigo agregado en este paso: agregar postValidator despues antes de llamar a la funcion del controller.
-// colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
+// colocamos lafuncion verifyToken para que se ejecute en cada request antes de invocar a la funcion del controllador
 // POST
 router.post('/post', '/', verifyToken, postValidator, save);
 
