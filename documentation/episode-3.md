@@ -1,6 +1,6 @@
 # Episodio 3: Implementando validaciones a los requests
 
-La idea de este episodio es implementar un mecanismo de validación para los endpoints **\_GET contacts/:index** que llama a contacts.controller.getByIndex para obtener un contacto por el Id y para el **\_POST /contacts** que invoca al contacts.controller.save para crear y/o a actualizar un contacto.
+La idea de este episodio es implementar un mecanismo de validación para los endpoints ***GET /contacts/:index*** que llama a contacts.controller.getByIndex para obtener un contacto por el Id y para el ***POST /contacts*** que invoca al contacts.controller.save para crear y/o a actualizar un contacto.
 
 Tal vez laprimera idea que pudieras pensar es implementar las validaciones con if, pero aqui es donde joi nos aporta algo ineteresante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
 
@@ -12,10 +12,9 @@ Tal vez laprimera idea que pudieras pensar es implementar las validaciones con i
 npm i joi
 ```
 
-2. Creamos el archivo **schema-validator.js** dentro de la carpeta **middleware**.
+2. Creamos el archivo ****schema-validator.js**** dentro de la carpeta ***middleware***.
 
 ```javascript
-/* eslint-disable consistent-return */
 /**
  *
  * @param {object} contextPart propiedad del objeto context: ctx.headers | ctx.params | ctx.query | ctx.request.body
@@ -60,9 +59,9 @@ module.exports = validateSchema;
 
 :eight_spoked_asterisk: Nota: Recuerda que un middleware es en resumen una funcion que se ejecutará antes de la función final. En el episodio 2 creamos uno llamado auth.js con el fin de validar el token. En este paso estamos creando unp que servirá para validar si los datos enviados en el request coinciden con el formato esperado.
 
-3. Ahora creamos la carpeta **schemas** dentro de src
+3. Ahora creamos la carpeta ***schemas*** dentro de src
 
-4. Creamos el archivo **middleware/contacts.schema.js** para definir las reglas de validacion de los escenarios.
+4. Creamos el archivo ***middleware/contacts.schema.js*** para definir las reglas de validacion de los escenarios.
 
 ```javascript
 const Joi = require('joi');
@@ -96,7 +95,7 @@ module.exports = {
 };
 ```
 
-5. Ahora modificamos el archivo **routes/contacts.route.js** para indicarle a la aplicación que use el esquema **contacts.schema.js** y middleware **schema-validator.js** creados anteriormente. Fijate en los comentarios que empiezan con _codigo agregado en este paso_ : o con _codigo modificado en este paso_ , el archivo final debe quedar asi:
+5. Ahora modificamos el archivo ***routes/contacts.route.js*** para indicarle a la aplicación que use el esquema ***contacts.schema.js*** y middleware ***schema-validator.js*** creados anteriormente. Fijate en los comentarios que empiezan con ***codigo agregado en este paso:*** o con ***codigo modificado en este paso:*** , el archivo final debe quedar asi:
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -126,6 +125,6 @@ router.post('/post', '/', verifyToken, postValidator, save);
 module.exports = router;
 ```
 
-6. Listo tiempo de probar, inicia la aplicación y obten un token de algun usuario que hayas creado, luego realiza por Postman haz un request al GET localhost:3000/contacts/1 esperando se ejecute bien y ahora cambia el parametro 1 por un letra y veras que recibes un StatusCode 422 con el mensaje _Invalid URL Parameters - "index" must be a number_.
+6. Listo tiempo de probar, inicia la aplicación y obten un token de algun usuario que hayas creado, luego realiza por Postman haz un request al ***GET localhost:3000/contacts/1*** esperando se ejecute bien y ahora cambia el parametro 1 por un letra y veras que recibes un StatusCode 422 con el mensaje *Invalid URL Parameters - "index" must be a number*.
 
 7. Realiza tambien varias pruebas en el POST quitando por ejemplo un campo que hayamos establecido como requerido en el schema (postSchema). Tambien prueba enviando un tipo de datos incorrecto por ejemplo un email invalido en el campo email.
