@@ -12,7 +12,7 @@ En este epiodio nos enfocaremos en proteger el acceso a los endpoints de nuestra
 npm i bcrypt jsonwebtoken
 ```
 
-2. Crea el archivo _user.model.js_ dentro de la carpeta _models_. Este modelo nos permitira persistir las credenciales de los usuarios (username y password).
+2. Crea el archivo __models/user.model.js__. Este modelo nos permitira persistir las credenciales de los usuarios (username y password).
 
 ```javascript
 const mongoose = require('mongoose');
@@ -39,7 +39,7 @@ const userModel = model('UserModel', userSchema);
 module.exports = userModel;
 ```
 
-3. Creamos el archivo _src/controllers/auth.controller.js_ con la función _signUp_ para registrar nuevos usuarios.
+3. Creamos el archivo ___controllers/auth.controller.js___ con la función ___signUp___ para registrar nuevos usuarios.
 
 ```javascript
 const bcrypt = require('bcrypt');
@@ -67,7 +67,7 @@ module.exports.signUp = async (ctx) => {
 };
 ```
 
-4. Creamos el archivo _sec/routes/auth.route.js_. Donde expondremos los 1 endpoint auth/signUp.
+4. Creamos el archivo ___routes/auth.route.js___. Donde expondremos el endpoint auth/signUp.
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -80,7 +80,7 @@ router.post('auth/signup', '/signup', signUp);
 module.exports = router;
 ```
 
-5. Edita el archivo _routes.js_ y asegurate de agregar el auth.route creado previamente, el archivo debe quedar asi:
+5. Edita el archivo ___routes.js___ y asegurate de agregar el auth.route creado previamente, el archivo debe quedar asi:
 
 ```javascript
 const personRoute = require('./routes/contacts.route');
@@ -95,7 +95,7 @@ module.exports = [personRoute, authRoute];
 npm start
 ```
 
-7. Abre postman y en una nueva pestaña selecciona como verbo _POST_ y el url _localhost:3000/auth/signup_ haz clic en _Body_ y elige la opción _x-wwww-form-urlencoded_ ahora agrega dos keys _username_ y _password_. Estos datos recuerdalos para que los puedas usar mas adelante para autenticarte. Te dejo un ejemplo de codigo en curl para que tengas una idea:
+7. Abre postman y en una nueva pestaña selecciona como verbo ___POST___ y el url ___localhost:3000/auth/signup___ haz clic en ___Body___ y elige la opción ___x-wwww-form-urlencoded___ ahora agrega dos keys ___username___ y ___password___. Estos datos recuerdalos para que los puedas usar mas adelante para autenticarte. Te dejo un ejemplo de codigo en curl para que tengas una idea:
 
 ```bash
 curl --location --request POST 'localhost:3000/auth/signup' \
@@ -104,13 +104,13 @@ curl --location --request POST 'localhost:3000/auth/signup' \
 --data-urlencode 'password=misecreto'
 ```
 
-8. Si todo salió bien el usuario se debe haber cerado. De hecho la coleccion users se cerar automaticamente, consulta los datos en Mongo, veras que el password se ha generado como un hash, tal como lo implementamos en _controllers/users.controller.js_ funcion _signUp_.
+8. Si todo salió bien el usuario se debe haber creado. De hecho la coleccion users se crea automaticamente, consulta los datos en Mongo, veras que el password se ha generado como un _hash_, tal como lo implementamos en ___controllers/users.controller.js___ funcion ___signUp___.
 
 ### Autenticación y Manejo del Token
 
 Hasta aqui hemos creado todo el codigo para crear un usuario. Ahora vamos a implementar el metodo de autenticación y la generación del Token.
 
-1. Editamos elarchivo _env.yaml_ y agreguemos la variable TOKEN_KEY este valor lo usaremos para generar y validar el toekn.
+1. Editamos elarchivo ___env.yaml___ y agreguemos la variable ___TOKEN_KEY___ este valor lo usaremos para generar y validar el toekn.
 
 ```yaml
 development:
@@ -123,7 +123,7 @@ production:
   TOKEN_KEY: '1ldTgJBkSOA9xBrV'
 ```
 
-2. Editemos el archivo _src/controllers/auth.controller.js_ e importemos el module npm jsonwebtoken y tambien agregaremos la funcion signIn para autenticar y generar el token. Coloco todo el código aqui para que estes seguro de como debe quedar, pero presta atención al lo que sea ha agregado. He colocado el comentario _// codigo agregado en este paso_
+2. Editemos el archivo ___controllers/auth.controller.js___ e importemos el module npm jsonwebtoken y tambien agregaremos la funcion signIn para autenticar y generar el token. Coloco todo el código aqui para que estes seguro de como debe quedar, pero presta atención al lo que sea ha agregado. He colocado el comentario _// codigo agregado en este paso_
 
 ```javascript
 const bcrypt = require('bcrypt');
@@ -174,7 +174,7 @@ module.exports.signIn = async (ctx) => {
 };
 ```
 
-3. Editamos el archivo _src/routes/auth.route.js_ y agregaremos la funcion signIn en el require del auth.controller, tambien agregaremos el post invocará el signIn.
+3. Editamos el archivo ___routes/auth.route.js___ y agregaremos la funcion signIn en el require del auth.controller, tambien agregaremos el post invocará el signIn.
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -190,9 +190,9 @@ router.post('auth/signin', '/signin', signIn);
 module.exports = router;
 ```
 
-4. Ahora necesitamos crear un _middleware_ que nos permitirá implementar una validación del token para determinar si el usuario se ha autenticado antes de invocar a los endpoints del controller contacts. Para ello crea lacarpeta _middleware_ dentro de _src_.
+4. Ahora necesitamos crear un ___middleware___ que nos permitirá implementar una validación del token para determinar si el usuario se ha autenticado antes de invocar a los endpoints del controller contacts. Para ello crea lacarpeta ___middleware___ dentro de _src_.
 
-5. Y ahora creamos el archivo _auth.js_ dentro de esa carpeta:
+5. Y ahora creamos el archivo ___auth.js___ dentro de esa carpeta:
 
 ```javascript
 const jwt = require('jsonwebtoken');
@@ -218,7 +218,7 @@ module.exports.verifyToken = (ctx, next) => {
 };
 ```
 
-6. Te preguntarás donde usaremos el middleware creado en el paso anterior. Edita el archivo _src/routes/contacts.route.js_ e importa la referencia de middleware/auth.js y agregalo a cada endpoint antes de invocar cadametodo del controller.
+6. Te preguntarás donde usaremos el middleware creado en el paso anterior. Edita el archivo ___routes/contacts.route.js___ e importa la referencia de ___middleware/auth.js___ y agregalo a cada endpoint antes de invocar cada metodo del controller.
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -239,7 +239,7 @@ router.post('/post', '/', verifyToken, save);
 module.exports = router;
 ```
 
-7. Hemos terminado la implementación y es hora de probar. Envia un POST _localhost:3000/auth/signin_ y utiliza el mismo body que usaste cuando creaste al usuario. Nuevamente te muestro desde codigo curl para que tengas una idea mas clara. Recuerda usar las credenciales de algun usuario que hayas creado. El password debe ser plano NO el hash.
+7. Hemos terminado la implementación y es hora de probar. Envia un ___POST__ a ___localhost:3000/auth/signin___ y utiliza el mismo body que usaste cuando creaste al usuario. Nuevamente te muestro desde codigo curl para que tengas una idea mas clara. Recuerda usar las credenciales de algun usuario que hayas creado. El password debe ser plano NO el hash.
 
 ```bash
 curl --location --request POST 'localhost:3000/auth/signin' \
@@ -257,7 +257,7 @@ curl --location --request POST 'localhost:3000/auth/signin' \
 }
 ```
 
-9. Prueba haciendo un _GET_ al endpoint _localhost:3000/contacts/1_ pero antes de enviar la solicitud debes seleccionar la opción Headers y agregar el key _x-access-token_ con el valor devucelto en el campo access_token del paso anterior, por ejemplo:
+9. Prueba haciendo un ___GET___ al endpoint ___localhost:3000/contacts/1___ pero antes de enviar la solicitud debes seleccionar la opción ___Headers___ y agregar el key ___x-access-token___ con el valor devuelto en el campo _access_token_ del paso anterior, por ejemplo:
 
 ```bash
 curl --location --request GET 'localhost:3000/contacts/1' \
