@@ -1,4 +1,4 @@
-# Episodio 2
+# Episodio 2: Protegiendo el acceso del API
 
 En este epiodio nos enfocaremos en proteger el acceso a los endpoints de nuestra API usando Jason Web Token tambien conocido como [JWT](https://jwt.io/). Para ello usaremos las librerias [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt).
 
