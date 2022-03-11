@@ -71,9 +71,10 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
 
 - [Episodio 1: Creando mi primera API rest en Node.js y MongoDB](./documentation/episode-1.md)
 - [Episodio 2: Protegiendo el acceso del API](./documentation/episode-2.md)
-- [Episodio 3: Implementando validaciones de request y mejores prácticas de manejo de errores](./documentation/episode-3.md)
-- [Episodio 4: Documentando con Open API (conocido como Swagger)](./documentation/episode-4.md)
-- [Episodio 5: Implementando Unit Tests](./documentation/episode-5.md)
+- [Episodio 3: Implementando validaciones de request y manejo de errores](./documentation/episode-3.md)
+- [Episodio 4: Implementando el manejo de errores](./documentation/episode-4.md)
+- [Episodio 5: Documentando con Open API (conocido como Swagger)](./documentation/episode-5.md)
+- [Episodio 6: Implementando Unit Tests](./documentation/episode-5.md)
 
 ## Stack
 
@@ -81,7 +82,7 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
 - [Mongoose](https://mongoosejs.com/) - proporciona una solución directa basada en esquemas para modelar los datos de su aplicación con MongoDB
 - [EsLint](https://eslint.org/) - ESLint es una herramienta para identificar e informar sobre ruptura de estandares encontrados en el código ECMAScript / JavaScript.
 - [Prettier](https://prettier.io/) - Formateador de código, que nos ayuda a mantener limpio y alienado a los estandares.
-- [@hapi/joi](https://www.npmjs.com/package/@hapi/joi) - Nos permite definir esquemas de validación, lo cual nos da la oportunidad de validar los parametros que recibamos en las solicitudes http.
+- [joi](https://www.npmjs.com/package/joi) - Nos permite definir esquemas de validación, lo cual nos da la oportunidad de validar los parametros que recibamos en las solicitudes http.
 - [swagger2](https://github.com/carlansley/swagger2#readme) - Lo usaremos para cargar la documentación de nuestra api
 - [winston](https://github.com/winstonjs/winston#readme) - Un logger poderoso y popular en node.js
 - [yenv](https://github.com/jeffijoe/yenv#readme) - Nos permite manejar variables de entorno desde un archivo YAML
