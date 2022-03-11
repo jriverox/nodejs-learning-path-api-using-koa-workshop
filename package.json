@@ -28,6 +28,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cross-env": "^7.0.3",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
