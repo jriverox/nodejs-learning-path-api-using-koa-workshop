@@ -7,14 +7,18 @@ const env = yenv();
 
 module.exports.signUp = async (ctx) => {
   const { username, password } = ctx.request.body;
+  // validar que el usuario exista
   const found = await userModel.findOne({ username });
   if(found) {
     ctx.throw(422, `Usuario ${username} ya existe`);
   } else {
+    // crear un hash del password para no almacenarlo en texto plano en la bd
     const salt = await bcrypt.genSalt();
     const hashedPassword =  await bcrypt.hash(password, salt);
     const newUser = { username, password: hashedPassword };
+    // guardar el usuario en la bd
     await userModel.create(newUser);
+    // devolver 201 para indicar que sea a creado el recurso (usuario)
     ctx.response.status = 201;
   }
 };
