@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
+const { UnauthorizedError } = require('../utils/logging/error-factory');
 
 const env = yenv();
 
@@ -13,7 +14,8 @@ module.exports.verifyToken = (ctx, next) => {
     const decoded = jwt.verify(token, env.TOKEN_KEY);
     ctx.request.user = decoded;
   } catch (err) {
-    ctx.throw(401, 'Invalid Token');
+    throw UnauthorizedError('Invalid Token');
+    
   }
   return next();
 };
