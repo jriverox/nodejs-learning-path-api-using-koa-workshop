@@ -2,7 +2,7 @@
 
 Para el manejo de errores, usaremos la librería [winston](https://www.npmjs.com/package/winston) para logear los errores, aunque podriamos usar cualquier otra librería esto de hecho no es lo más relevante, ya que lo importante es manejar de manera centralizada los errores e incluso disponer de nuetra lógica de negocio para gestionar los errores de manera consistentemente.
 
-Aunque aqui muestro una manera muy sencilla deonde centralzar los errores, hoy hay excelente opciones que los proyectos profesionales suelen usar, por ejemplo usar Elastic Stack donde puedes almacenar los logs en Elasticsearch y visualizarlos con Kibana, otra muy buena opción el la dupla de Grafana y Prometheus.
+Aunque aqui muestro una manera muy sencilla donde centralzar los errores, hoy  en día hay excelentes opciones que los proyectos profesionales suelen usar, por ejemplo usar Elastic Stack donde puedes almacenar los logs en Elasticsearch y visualizarlos con Kibana, otra muy buena opción el la dupla de Grafana y Prometheus.
 
 Te invito a darle un vistazo a este [excelente documento de mejores parcticas](https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices)
 
