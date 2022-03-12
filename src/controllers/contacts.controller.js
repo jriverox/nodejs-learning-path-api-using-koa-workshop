@@ -1,5 +1,6 @@
 const contactModel = require('../models/contact.model');
- 
+const { NotFoundError } = require('../utils/logging/error-factory');
+
 /**
  *
  * @param {object} ctx: contexto de koa que contiene los parameteros de la solicitud, en este caso
@@ -8,16 +9,13 @@ const contactModel = require('../models/contact.model');
 module.exports.getByIndex = async (ctx) => {
   const index = ctx.params.index && !Number.isNaN(ctx.params.index) ? parseInt(ctx.params.index, 10) : 0;
 
-  if (index > 0) {
-    const filter = { index };
-    const data = await contactModel.findOne(filter);
-    if (data) {
-      ctx.body = data;
-    } else {
-      ctx.throw(404, `No se ha encontrado la persona con el indice ${index}`);
-    }
+  const filter = { index };
+  const data = await contactModel.findOne(filter);
+  if (data) {
+    ctx.body = data;
   } else {
-    ctx.throw(422, `Valor ${ctx.params.index} no soportado`);
+    // codigo agregado en este paso: Manejamos los errores operacionales usando nuestra fabrica de errores
+    throw NotFoundError(`No se ha encontrado la persona con el indice ${index}`)
   }
 };
 

@@ -1,3 +1,5 @@
+const { UnknownError, InvalidInputError } = require('../utils/logging/error-factory');
+
 /* eslint-disable consistent-return */
 /**
  * 
@@ -10,7 +12,8 @@ const validateRequest = (contextPart, label, schema, options) => {
   if (schema) {
     const { error } = schema.validate(contextPart, options);
     if (error) {
-      throw new Error(`Invalid ${label} - ${error.message}`);
+      // codigo agregado en este paso: Manejamos los errores operacionales usando nuestra fabrica de errores
+      throw UnknownError(`Invalid ${label} - ${error.message}`)
     }
   }
 };
@@ -34,7 +37,8 @@ const validateSchema = (schema) => (ctx, next) => {
     // invocar a la funcion sigueinte de la cadena (esto es importante en el cocepto de un middleware, porque son funciones previas que se ejecutan antes de llamar al metodo del controlador)
     return next();
   } catch (error) {
-    ctx.throw(422, error.message);
+    // codigo agregado en este paso: Manejamos los errores operacionales usando nuestra fabrica de errores
+    throw InvalidInputError(`Solicitud no válida: ${error.message}`)
   }
 }
 
