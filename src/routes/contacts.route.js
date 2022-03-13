@@ -23,6 +23,6 @@ router.get('/byIndex', '/:index', verifyToken, byIndexValidator,  getContactByIn
 router.post('/post', '/', verifyToken, postValidator, createContact);
 
 // PUT /contacts/29
-router.put('/put', '/:index', verifyToken, postValidator, updateContact);
+router.put('/put', '/:index', verifyToken, byIndexValidator, postValidator, updateContact);
 
 module.exports = router;

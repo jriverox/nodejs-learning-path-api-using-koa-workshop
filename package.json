@@ -4,7 +4,8 @@
   "description": "nodejs-learning-path-api-using-koa-worksho",
   "main": "src/server.js",
   "scripts": {
-    "test": "jest",
+    "test": "cross-env NODE_ENV=development jest --silent=false",
+    "test:coverage": "cross-env NODE_ENV=development jest --coverage",
     "start": "cross-env NODE_ENV=development nodemon ./src/server.js",
     "lint:show": "eslint src/ -f stylish",
     "lint:fix": "eslint --fix --ext .js ."
@@ -40,11 +41,15 @@
     "yenv": "^3.0.1"
   },
   "devDependencies": {
+    "@shopify/jest-koa-mocks": "^3.1.5",
+    "@types/jest": "^27.4.1",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
   }
