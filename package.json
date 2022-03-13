@@ -26,13 +26,17 @@
   },
   "homepage": "https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cross-env": "^7.0.3",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.1.1",
     "mongoose": "^6.2.4",
+    "winston": "^3.6.0",
     "yenv": "^3.0.1"
   },
   "devDependencies": {
