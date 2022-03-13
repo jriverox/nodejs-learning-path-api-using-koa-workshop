@@ -9,7 +9,7 @@ const { NotFoundError } = require('../utils/logging/error-factory');
 module.exports.getContactByIndex = async (ctx) => {
   const { index } = ctx.params;
 
-  const filter = { index };
+  const filter = { index: parseInt(index, 10) };
   const data = await contactModel.findOne(filter);
   if (data) {
     ctx.body = data;
@@ -28,7 +28,7 @@ module.exports.getContactByIndex = async (ctx) => {
 module.exports.updateContact = async (ctx) => {
   const { index } = ctx.params;
   const contact = ctx.request.body;
-  const filter = { index };
+  const filter = { index: parseInt(index, 10) };
   const options = { upsert: false };
   const found = await contactModel.findOne(filter);
   if (!found) {
