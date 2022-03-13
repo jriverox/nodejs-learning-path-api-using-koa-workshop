@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
 const userModel = require('../models/user.model');
+const { InvalidInput, Unauthorized } = require('../utils/logging/error-factory');
 
 const env = yenv();
 
@@ -10,7 +11,7 @@ module.exports.signUp = async (ctx) => {
   // validar que el usuario exista
   const found = await userModel.findOne({ username });
   if(found) {
-    ctx.throw(422, `Usuario ${username} ya existe`);
+    throw InvalidInput(`Usuario ${username} ya existe`);
   } else {
     // crear un hash del password para no almacenarlo en texto plano en la bd
     const salt = await bcrypt.genSalt();
@@ -39,6 +40,6 @@ module.exports.signIn = async (ctx) => {
     expirationDate.setHours( expirationDate.getHours() + 2 );
     ctx.body = { access_token: token, token_expires: expirationDate };
   } else {
-    ctx.throw(422, 'Usuario o password incorectos');
+    throw Unauthorized('Usuario o password incorectos');
   }
 };

@@ -30,20 +30,20 @@ module.exports.updateContact = async (ctx) => {
   const contact = ctx.request.body;
   const filter = { index };
   const options = { upsert: false };
-  const found = await contactModel.exists(filter);
-
+  const found = await contactModel.findOne(filter);
   if (!found) {
     throw NotFoundError(`No se ha encontrado la persona con el indice ${index}`)
   } else {
+    console.log('yyyy', found)
     await contactModel.updateOne(filter, contact, options);
     ctx.body = contact;
+    ctx.response.status = 200;
   }
 };
 
 module.exports.createContact = async (ctx) => {
-  const contact = ctx.request.body;
-  const {index} = await contactModel.findOne().limit(1).sort('-index').select('index').exec();
-  contact.index = index + 1;
+  const { index } = await contactModel.findOne({}, 'index', {sort: {index: -1}});
+  const contact = {...ctx.request.body, index: index + 1 };
   await contactModel.create(contact);
   ctx.body = contact;
   ctx.response.status = 201;
