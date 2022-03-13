@@ -4,19 +4,19 @@ Recuerda haber leìdo los requistos que necesitas instalar antes en la página [
 
 ## Pasos para implementar
 
-1. Creemos la carpeta raíz de nuestro proyecto, sugiero algo como <kbd>api-node-koa-workshop</kbd>
+1. Creemos la carpeta raíz de nuestro proyecto, sugiero algo como ***api-node-koa-workshop***
 2. Abramos la carpeta con Visual Studio Code
 3. Abre el terminal (puede ser de VS Code o el de tu preferencia pero debes dentro de la carpeta) e inicializa el nuevo proyecto npm, con el comando:
 
 ```bash
 npm init -y
 ```
-4. Instalemos las principales dependencias que usaremos (<kbd>koa</kbd> y algunas del su ecosistema, <kbd>mongoose</kbd> para conectarnos a MongoDB, <kbd>yenv</kbd> para manejar la configuarción en un yaml y <kbd>cross-env</kbd> para facilitar el manejo de la variable de entorno <kbd>NODE_ENV</kbd>), ejecuta el siguiente comando:
+4. Instalemos las principales dependencias que usaremos (***koa*** y algunas del su ecosistema, ***mongoose*** para conectarnos a MongoDB, ***yenv*** para manejar la configuarción en un yaml y ***cross-env*** para facilitar el manejo de la variable de entorno ***NODE_ENV***), ejecuta el siguiente comando:
 
 ```bash
 npm i koa koa-router koa-bodyparser koa-logger koa-json mongoose yenv cross-env
 ```
-5. Instalemos <kbd>nodemon</kbd> para que escuche si cambiamos nuestro codigo y se reinicie nuestro servidor node, pero la instalaremos como *dependencia de desarrollo* con el siguiente comando:
+5. Instalemos ***nodemon*** para que escuche si cambiamos nuestro codigo y se reinicie nuestro servidor node, pero la instalaremos como *dependencia de desarrollo* con el siguiente comando:
 ```bash
 npm i --save-dev nodemon
 ```
@@ -24,16 +24,16 @@ npm i --save-dev nodemon
 ```bash
 git init
 ```
-7. ***OPTIONAL*** Solo en caso que no tengas un .gitignore configurado. Ahora agreguemos el archivo *.gitignore* necesario para no subir al repositorio archivos innecsarios como los modulos npm, apoyate en el pluging gitignore que instalamos en los requisitos. Abre la Paleta de Comandos (<kbd>control + shift + p</kbd>) y escribe <kbd>gitignore</kbd>, y selecciona <kbd>Add gitignore</kbd> y luego escribe <kbd>node</kbd> en el cuadro de texto.
-8. ***OPTIONAL*** Agreguemos el archivo *.editorconfig*. Abre de nuevo la Paleta de Comandos (<kbd>control + shift + p</kbd>) y escribe <kbd>editor</kbd> y selecciona la opción <kbd>Generate .editorconfig</kbd>. Este archivo nos permite especificar por ejemplo cuantos espacios tendran nuestros tabs para identar nuestro código.
-9. ***OPTIONAL*** Editemos el archivo <kbd>.editorconfig</kbd> y cambia el valor de <kbd>indent_size</kbd> a **2**
+7. ***OPTIONAL*** Solo en caso que no tengas un .gitignore configurado. Ahora agreguemos el archivo *.gitignore* necesario para no subir al repositorio archivos innecsarios como los modulos npm, apoyate en el pluging gitignore que instalamos en los requisitos. Abre la Paleta de Comandos (***control + shift + p***) y escribe ***gitignore***, y selecciona ***Add gitignore*** y luego escribe ***node*** en el cuadro de texto.
+8. ***OPTIONAL*** Agreguemos el archivo *.editorconfig*. Abre de nuevo la Paleta de Comandos (***control + shift + p***) y escribe ***editor*** y selecciona la opción ***Generate .editorconfig***. Este archivo nos permite especificar por ejemplo cuantos espacios tendran nuestros tabs para identar nuestro código.
+9. ***OPTIONAL*** Editemos el archivo ***.editorconfig*** y cambia el valor de ***indent_size*** a **2**
 10.  Ok, ahora creemos las carpetas que usaremos para estructurar nuestro proyecto:
-11.  Crea la carpeta <kbd>src</kbd> en la raiz del proyecto
+11.  Crea la carpeta ***src*** en la raiz del proyecto
 12.  Dentro de la carpeta *src* creamos las siguientes carpetas vacias para ir estructurando nuestro proyecto:
-  - <kbd>models</kbd>
-  - <kbd>controllers</kbd>
-  - <kbd>routes</kbd>
-13. Dentro de la carpeta *models* creamos <kbd>contact.model.js</kbd> con el siguiente código:
+  - ***models***
+  - ***controllers***
+  - ***routes***
+13. Dentro de la carpeta *models* creamos ***contact.model.js*** con el siguiente código:
 ```javascript
 /**
  * contact.model.js
@@ -110,16 +110,17 @@ const contactModel = model('ContactModel', contactSchema);
 module.exports = contactModel;
 
 ```
-14. Dentro de la carpeta *controllers* creamos <kbd>contacts.controller.js</kbd> con el siguiente código:
+14. Dentro de la carpeta *controllers* creamos ***contacts.controller.js*** con el siguiente código:
 ```javascript
 const contactModel = require('../models/contact.model');
+
 /**
  *
  * @param {object} ctx: contexto de koa que contiene los parameteros de la solicitud, en este caso
  * desde el url de donde sacaremos el valor del parametro index (ctx.params.index)
  */
-module.exports.getByIndex = async (ctx) => {
-  const index = ctx.params.index && !Number.isNaN(ctx.params.index) ? parseInt(ctx.params.index, 10) : 0;
+module.exports.getContactByIndex = async (ctx) => {
+  const { index } = ctx.params;
 
   if (index > 0) {
     const filter = { index };
@@ -127,7 +128,7 @@ module.exports.getByIndex = async (ctx) => {
     if (data) {
       ctx.body = data;
     } else {
-      ctx.throw(404, `No se ha encontrado la persona con el indice ${index}`);
+      ctx.throw(404, `No se ha encontrado la contacto con el indice ${index}`);
     }
   } else {
     ctx.throw(422, `Valor ${ctx.params.index} no soportado`);
@@ -138,34 +139,53 @@ module.exports.getByIndex = async (ctx) => {
  *
  * @param {object} ctx: contexto de koa que contiene los parameteros
  * de la solicitud, en este caso desde el body,
- * obtendremos las propiedades de la persona a guardar a traves de ctx.request.body
+ * obtendremos las propiedades de la contacto a guardar a traves de ctx.request.body
  */
-module.exports.save = async (ctx) => {
+module.exports.updateContact = async (ctx) => {
+  const { index } = ctx.params;
   const contact = ctx.request.body;
-  const filter = { index: contact.index };
-  const options = { upsert: true };
-  await contactModel.updateOne(filter, contact, options);
-  ctx.body = contact;
+  const filter = { index };
+  const options = { upsert: false };
+  const found = await contactModel.exists(filter);
+
+  if (!found) {
+    ctx.throw(404, `No se ha encontrado la contacto con el indice ${index}`);
+  } else {
+    await contactModel.updateOne(filter, contact, options);
+    ctx.body = contact;
+  }
 };
 
+module.exports.createContact = async (ctx) => {
+  const contact = ctx.request.body;
+  const {index} = await contactModel.findOne().limit(1).sort('-index').select('index').exec();
+  contact.index = index + 1;
+  await contactModel.create(contact);
+  ctx.body = contact;
+  ctx.response.status = 201;
+};
 ```
-15. Dentro de la carpeta *routes* creamos <kbd>contacts.route.js</kbd> con el siguiente código:
+
+15. Dentro de la carpeta *routes* creamos ***contacts.route.js*** con el siguiente código:
 ```javascript
 const KoaRouter = require('koa-router');
 
 const router = new KoaRouter({ prefix: '/contacts' });
-const { getByIndex, save } = require('../controllers/contacts.controller');
+const { getContactByIndex, updateContact, createContact } = require('../controllers/contacts.controller');
 
 // GET /contacts/29
-router.get('/byIndex', '/:index', getByIndex);
+router.get('/byIndex', '/:index', getContactByIndex);
 
-// POST
-router.post('/post', '/', save);
+// POST /contacts/
+router.post('/post', '/', createContact);
+
+// PUT /contacts/29
+router.put('/put', '/:index', updateContact);
 
 module.exports = router;
 
 ```
-16. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo <kbd>routes.js</kbd> dentro de *src* con el siguiente codigo:
+16. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo ***routes.js*** dentro de *src* con el siguiente codigo:
 ```javascript
 /**
  * Expone una coleccion de todos los routes de nuestra api,
@@ -176,7 +196,7 @@ const personRoute = require('./routes/contacts.route');
 module.exports = [personRoute];
 
 ```
-17. Ahora crearemos el archivo responsable por inicial la aplicación :zap:, creamos el archivo <kbd>server.js</kbd> dentro de *src*
+17. Ahora crearemos el archivo responsable por inicial la aplicación :zap:, creamos el archivo ***server.js*** dentro de *src*
 ```javascript
 /* eslint-disable no-console */
 /**
@@ -216,7 +236,7 @@ mongoose
   });
 
 ```
-18. Agreguemos el archivo de configuración <kbd>env.yaml</kbd> a la raiz del proyecto, con el siguiente coódigo:
+18. Agreguemos el archivo de configuración ***env.yaml*** a la raiz del proyecto, con el siguiente coódigo:
 ```yaml
 development:
     PORT: 3000
@@ -230,12 +250,12 @@ production:
 
 Otro punto importante acerca de la variable *MONGODB_URL* la cual contiene la cadena de conexión de la BD de MongoDB, el valor que deberás establecer dependerá de donde estes ejecutando la BD y si tiene  credenciales o no. En el caso mostrado mas arriba (mongodb://localhost:27017/contacts_demo) no tiene ni password ni usuario, esto es una práctica insegura pero obviamente para fines de prueba está bien.
 
-19. Ahora agregaremos el nombre del archivo <kbd>env.yaml</kbd> al archivo <kbd>.gitignore</kbd>, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva *env.yaml*
+19. Ahora agregaremos el nombre del archivo ***env.yaml*** al archivo ***.gitignore***, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva *env.yaml*
 
 ## Probemos nuestra API
 
 Hasta aquí hemos implementado el código para construir nuestra api, pero y como :smiling_imp: puedo ponerla en marcha y probarla!! 
-1. Abrimos el archivo <kbd>package.json</kbd> que esta en la raiz y agrega dentro de la sección <kbd>scripts</kbd> la siguiente linea:
+1. Abrimos el archivo ***package.json*** que esta en la raiz y agrega dentro de la sección ***scripts*** la siguiente linea:
 ```json
 "start": "cross-env NODE_ENV=development nodemon ./src/server.js",
 ```
@@ -282,9 +302,9 @@ http://localhost:3000/contacts/1
     "active": true
 }
 ```
-5. Para probar el *POST*, debemos acceder por <kbd>Postman</kbd>, selecciona en la lista de verbos <kbd>POST</kbd>.
+5. Para probar el *POST*, debemos acceder por ***Postman***, selecciona en la lista de verbos ***POST***.
 
-8. Selecciona <kbd>Body</kbd>, luego la opción <kbd>raw</kbd> y luego en la lista de la derecha seleciona <kbd>JSON</kbd>, pega el siguiente codigo:
+8. Selecciona ***Body***, luego la opción ***raw*** y luego en la lista de la derecha seleciona ***JSON***, pega el siguiente codigo:
 Introduce algún cambio en algún campo para comprobar que se actualiza.
 ```json
 {
@@ -312,7 +332,7 @@ Introduce algún cambio en algún campo para comprobar que se actualiza.
 
 ## Configuración de ESlint y Prettier
 ### EsLint
-1. Instalemos <kbd>eslint</kbd> como dependencia de desarrollo:
+1. Instalemos ***eslint*** como dependencia de desarrollo:
 ```bash
 npm i --save-dev eslint
 ```
@@ -336,11 +356,11 @@ npx eslint --init
   
 ### Prettier
 Recuerda haber instalado el plugin de prettier (mencionado en los requisitos)
-4. Instalamos <kbd>Prettier</kbd> como dependencia de desarrollo:
+4. Instalamos ***Prettier*** como dependencia de desarrollo:
 ```bash
 npm i --save-dev prettier eslint-config-prettier eslint-plugin-prettier
 ```
-5. Creemos el archivo <kbd>.prettierrc.js</kbd> en la raiz del proyecto y lo editamos con el siguiente codigo:
+5. Creemos el archivo ***.prettierrc.js*** en la raiz del proyecto y lo editamos con el siguiente codigo:
 ```javascript
 module.exports = {
   "endOfLine": "lf",
@@ -352,7 +372,7 @@ module.exports = {
   endOfLine: "auto"
 };
 ```
-6. Editemos el archivo de configuración de eslint <kbd>.eslintrc.yml</kbd> para que tenga los plugins y las extensiones de prettier, reemplaza el contenido por:
+6. Editemos el archivo de configuración de eslint ***.eslintrc.yml*** para que tenga los plugins y las extensiones de prettier, reemplaza el contenido por:
 ```yaml
 env:
   browser: true
@@ -370,7 +390,7 @@ plugins:
 rules: {}
 
 ```
-7. Edita el archivo <kbd>package.json</kbd> y agrega las siguientes lineas a la sección <kbd>scripts</kbd>, las cuales nos permitiran ejecutar la comprobación si nuestro codigo cumple con los estandares y reglas de eslint:
+7. Edita el archivo ***package.json*** y agrega las siguientes lineas a la sección ***scripts***, las cuales nos permitiran ejecutar la comprobación si nuestro codigo cumple con los estandares y reglas de eslint:
 ```json
 "lint:show": "eslint src/ -f stylish",
 "lint:fix": "eslint --fix --ext .js .",
@@ -384,5 +404,5 @@ npm run lint:show
 ```bash
 npm run lint:fix
 ```
-9. Vuelve a ejecutar el comando: <kbd>npm run lint:show</kbd> y veras que no tienes errores o bajo la cantidad
-10. Probemos nuestro código de nuevo: ejecuta <kbd>npm start</kbd> y accede por postman o el browser a http://localhost:3000/contacts/29
+9. Vuelve a ejecutar el comando: ***npm run lint:show*** y veras que no tienes errores o bajo la cantidad
+10. Probemos nuestro código de nuevo: ejecuta ***npm start*** y accede por postman o el browser a http://localhost:3000/contacts/29
