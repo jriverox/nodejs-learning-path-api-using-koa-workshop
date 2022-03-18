@@ -746,11 +746,11 @@ Te muestro dos imagenes que me parece que explican por si mismas la diferencia:
 
 `Unit Test`
 
-<img src="images/unit-test-simil.jpg" alt="unit-test" width="200"/>
+<img src="images/unit-test-simil.jpg" alt="unit-test" width="500"/>
 
 `Integration Test`
 
-<img src="images/integration-test-simil.jpg" alt="integration-test" width="200"/>
+<img src="images/integration-test-simil.jpg" alt="integration-test" width="500"/>
 
 Basta de tanta teoría y vamos a los pasos de implementación:
 
