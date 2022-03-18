@@ -1,5 +1,11 @@
 # Episodio 5: Unit Tests + Integration Tests
 
+- [Episodio 5: Unit Tests + Integration Tests](#episodio-5-unit-tests--integration-tests)
+  - [Paquetes NPM que vamos a utilizar:](#paquetes-npm-que-vamos-a-utilizar)
+  - [Pasos para implementar](#pasos-para-implementar)
+    - [Unit Tests](#unit-tests)
+    - [Integration Tests](#integration-tests)
+
 En este episodio vamos a implementar dos tipos de pruebas las cuales son muy importantes para asegurar la calidad de un proyecto. El tema de unit testing e integration testing es muy importante de hecho hoy en día muchos proyectos lo tienen como parte del desarrollo y restringen integrar código si las pruebas no tienen la cobertura deseada.
 
 En este ejemplo hemos realizado las pruebas de último, pero hay prácticas como [TDD](https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas) que se toman tan en serio la fase de testing que inician con la implementación de Unit testing antes de codificar cualquier funcionalidad.
@@ -695,7 +701,26 @@ module.exports = {
 "test:coverage": "cross-env NODE_ENV=development jest --coverage",
 ```
 
-15. Ejecuta las pruebas con cualquiera de los siguientes scrips:
+15.  Editemos el archivo `.eslintrc.yml` y agreguemos jest/global:true dentro de env y jest en la lista de plugins
+```yaml
+env:
+  node: true
+  commonjs: true
+  es2021: true
+  jest/global: true
+extends:
+  - airbnb-base
+  - eslint:recommended
+  - prettier
+parserOptions:
+  ecmaVersion: latest
+plugins:
+  - prettier
+  - jest
+rules: {}
+```
+
+16. Ejecuta las pruebas con cualquiera de los siguientes scrips:
 
 ```bash
 npm run test
@@ -712,3 +737,386 @@ npm run test:coverage
 ```
 
 :eight_spoked_asterisk: Nota: esta versión ejecuta todas las pruebas mostrandote la cobertura.
+
+### Integration Tests
+
+A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de codigo de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de mal alto nivel en la cual se deben consumir capas o componentes mas internos, incluso sin necesidad de crear un mock para componentes externos como librerías, apis o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
+
+Te muestro dos imagenes que me parece que explican por si mismas la diferencia:
+Unit Test
+![Unit Test](images/unit-test-simil.jpg)
+
+Integration Test
+![Integration Test](images/integration-test-simil.jpg)
+
+Basta de tanta teorñia y vamos a los pasos de implementación:
+
+1. Instalamos supertest
+```bash
+npm i --save-dev supertest
+```
+
+2. Creamos la carpeta `integration` dentro de la carpeta `tests`.
+
+3. Creamos el archivo `contacts.spec.js` dentro de `tests/integration`. 
+
+```javascript
+const request = require('supertest');
+const contactModel = require('../../src/models/contact.model');
+const app = require('../../src/app');
+const contactMockData = require('../mock-data/contact.json');
+const {
+  contactInvalidEmail,
+  contactMissingNames,
+  contactInvalidDateOfBirth,
+} = require('../mock-data/contacts-invalid-cases.json');
+const { validToken, wrongToken } = require('../mock-data/token.json');
+
+describe('Contacts API', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterAll((done) => {
+    done();
+  });
+
+  describe('GET contact by index', () => {
+    it('When pass an index of existing contact and valid token, should return the success and statusCode 200', async () => {
+      const contact = {
+        index: 1000,
+        ...contactMockData,
+      };
+      contactModel.findOne = jest.fn().mockResolvedValue(contact);
+      const agent = request(app.callback());
+      const response = await agent
+        .get(`/contacts/${contact.index}`)
+        .set('Accept', 'application/json')
+        .set('x-access-token', validToken);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(contact);
+      expect(contactModel.findOne).toBeCalled();
+      expect(contactModel.findOne.mock.calls.length).toBe(1);
+    });
+
+    it('When pass an index of a contact that does not exist and valid token, should return the statusCode 404', async () => {
+      const index = 25000;
+
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .get(`/contacts/${index}`)
+        .set('Accept', 'application/json')
+        .set('x-access-token', validToken);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({});
+      expect(contactModel.findOne).toHaveBeenCalledWith({ index });
+      expect(contactModel.findOne.mock.calls.length).toBe(1);
+    });
+
+    it('When pass an invalid index and valid token, should return the statusCode 422', async () => {
+      const index = 'xxxxxxx';
+
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .get(`/contacts/${index}`)
+        .set('Accept', 'application/json')
+        .set('x-access-token', validToken);
+
+      expect(response.status).toBe(422);
+      expect(response.body).toEqual({});
+    });
+
+    it('When pass a valid index but a invalid token, should return the statusCode 401', async () => {
+      const index = 1000;
+      const contact = {
+        index: 1000,
+        ...contactMockData,
+      };
+      contactModel.findOne = jest.fn().mockResolvedValue(contact);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .get(`/contacts/${contact.index}`)
+        .set('Accept', 'application/json')
+        .set('x-access-token', wrongToken);
+
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({});
+    });
+  });
+
+  // ACTUALIZACION DE CONTACTOS
+  describe('Update Contact', () => {
+    it('When pass correct data of a contact that exists and a valid token, should return statusCode 200', async () => {
+      const body = { ...contactMockData };
+      const contactFound = {
+        index: 1000,
+        ...contactMockData,
+      };
+      contactModel.findOne = jest.fn().mockResolvedValue(contactFound);
+      contactModel.updateOne = jest.fn().mockResolvedValue({});
+      const agent = request(app.callback());
+
+      const response = await agent
+        .put(`/contacts/${contactFound.index}`)
+        .send(body)
+        .set('Accept', 'application/json')
+        .set('x-access-token', validToken);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(body);
+      expect(contactModel.findOne).toHaveBeenCalledWith({ index: contactFound.index });
+      expect(contactModel.findOne.mock.calls.length).toBe(1);
+      expect(contactModel.updateOne.mock.calls.length).toBe(1);
+    });
+
+    it('When try to update of a contact that does not exist and pass a valid token, should return statusCode 404', async () => {
+      const body = { ...contactMockData };
+      const contactFound = {
+        index: 1000,
+        ...contactMockData,
+      };
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .put(`/contacts/${contactFound.index}`)
+        .send(body)
+        .set('Accept', 'application/json')
+        .set('x-access-token', validToken);
+
+      expect(response.status).toBe(404);
+      expect(contactModel.findOne).toHaveBeenCalledWith({ index: contactFound.index });
+      expect(contactModel.findOne.mock.calls.length).toBe(1);
+    });
+
+    it('When try to update of a contact with incorrect data and pass a valid token, should return statusCode 422', async () => {
+      const index = 1000;
+
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      const agent = request(app.callback());
+
+      const invalidBodies = [contactInvalidEmail, contactMissingNames, contactInvalidDateOfBirth];
+
+      for (const invalidBody of invalidBodies) {
+        const response = await agent
+          .put(`/contacts/${index}`)
+          .send(invalidBody)
+          .set('Accept', 'application/json')
+          .set('x-access-token', validToken);
+
+        expect(response.status).toBe(422);
+      }
+      expect(contactModel.findOne).not.toHaveBeenCalled();
+    });
+
+    it('When try to update but pass wrong token, should return statusCode 401', async () => {
+      const body = { ...contactMockData };
+      const contactFound = {
+        index: 1000,
+        ...contactMockData,
+      };
+      //contactModel.findOne = jest.fn().mockResolvedValue(contactFound);
+      //contactModel.updateOne = jest.fn().mockResolvedValue({});
+      const agent = request(app.callback());
+
+      const response = await agent
+        .put(`/contacts/${contactFound.index}`)
+        .send(body)
+        .set('Accept', 'application/json')
+        .set('x-access-token', wrongToken);
+
+      expect(response.status).toBe(401);
+      expect(contactModel.findOne).not.toHaveBeenCalled();
+    });
+  });
+
+  //CREACION DE CONTACTOS
+  describe('Create Contact', () => {
+    it('When try to create a contact with correct data and a valid token, should return statusCode 201', async () => {
+      const body = { ...contactMockData };
+      const lastIndex = 1000;
+      contactModel.findOne = jest.fn().mockResolvedValue({ index: lastIndex });
+      contactModel.create = jest.fn().mockResolvedValue({});
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/contacts/')
+        .send(body)
+        .set('Accept', 'application/json')
+        .set('x-access-token', validToken);
+
+      expect(response.status).toBe(201);
+      expect(response.body.index).toBeGreaterThan(lastIndex);
+      expect(contactModel.create.mock.calls.length).toBe(1);
+    });
+
+    it('When try to create new contact with incorrect data and pass a valid token, should return statusCode 422', async () => {
+      const index = 1000;
+
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      contactModel.create = jest.fn().mockResolvedValue({});
+      const agent = request(app.callback());
+
+      const invalidBodies = [contactInvalidEmail, contactMissingNames, contactInvalidDateOfBirth];
+
+      for (const invalidBody of invalidBodies) {
+        const response = await agent
+          .post('/contacts')
+          .send(invalidBody)
+          .set('Accept', 'application/json')
+          .set('x-access-token', validToken);
+
+        expect(response.status).toBe(422);
+      }
+      expect(contactModel.findOne).not.toHaveBeenCalled();
+      expect(contactModel.create).not.toHaveBeenCalled();
+    });
+
+    it('When try to create but pass wrong token, should return statusCode 401', async () => {
+      const body = { ...contactMockData };
+
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      contactModel.create = jest.fn().mockResolvedValue({});
+
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/contacts/')
+        .send(body)
+        .set('Accept', 'application/json')
+        .set('x-access-token', wrongToken);
+
+      expect(response.status).toBe(401);
+      expect(contactModel.findOne).not.toHaveBeenCalled();
+      expect(contactModel.create).not.toHaveBeenCalled();
+    });
+  });
+});
+```
+
+4. Ahora creamos otra prueba creando el archivo `auth.spec.js` igualmente dentro de `tests/integration`.
+
+```javascript
+const request = require('supertest');
+const bcrypt = require('bcrypt');
+const userModel = require('../../src/models/user.model');
+const app = require('../../src/app');
+const user = require('../mock-data/user.json');
+
+jest.mock('bcrypt');
+
+describe('Auth API', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterAll((done) => {
+    done();
+  });
+  //REGISTRO DE USUARIO
+  describe('signup', () => {
+    it('When try to register new user with valid data and username that does not exist, should return statusCode 201', async () => {
+      userModel.findOne = jest.fn().mockResolvedValue(null);
+      userModel.create = jest.fn().mockResolvedValue({});
+
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/auth/signup')
+        .send(user)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(201);
+      expect(userModel.findOne).toHaveBeenCalled();
+      expect(userModel.create).toHaveBeenCalled();
+    });
+
+    it('When try to register new user with valid data but the username is already exists, should return statusCode 422', async () => {
+      userModel.findOne = jest.fn().mockResolvedValue(user);
+      userModel.create = jest.fn().mockResolvedValue({});
+
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/auth/signup')
+        .send(user)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(422);
+      expect(userModel.findOne).toHaveBeenCalled();
+      expect(userModel.create).not.toHaveBeenCalled();
+    });
+  });
+
+  //AUTENCICACION Y GENERACION DE TOKEN
+  describe('signin', () => {
+    it('When try to signin with valid credentials, should return statusCode 200 and a new token', async () => {
+      userModel.findOne = jest.fn().mockResolvedValue(user);
+      bcrypt.compare = jest.fn().mockResolvedValue(true);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/auth/signin')
+        .send(user)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('access_token');
+      expect(response.body).toHaveProperty('token_expires');
+      expect(response.body.access_token.length).toBeGreaterThan(0);
+      expect(response.body.token_expires.length).toBeGreaterThan(0);
+      expect(userModel.findOne).toHaveBeenCalled();
+    });
+
+    it('When try to signin with wrong username, should return statusCode 401 (Unauthorized)', async () => {
+      userModel.findOne = jest.fn().mockResolvedValue(null);
+      //bcrypt.compare = jest.fn().mockResolvedValue(true);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/auth/signin')
+        .send(user)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(401);
+    });
+
+    it('When try to signin with valid username but wrong password, should return statusCode 401 (Unauthorized)', async () => {
+      userModel.findOne = jest.fn().mockResolvedValue(user);
+      bcrypt.compare = jest.fn().mockResolvedValue(false);
+      const agent = request(app.callback());
+
+      const response = await agent
+        .post('/auth/signin')
+        .send(user)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(401);
+    });
+  });
+});
+```
+
+5. Editamos el archivo `package.json` para agregar el siguiente script:
+```json
+ "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage"
+```
+
+6. Ahora ejecutamos las pruebas, tenemos la opción de ejecutar solo las de integracion o toda la suite de pruebas:
+
+```bash
+npm run test:integration
+```
+
+y si queremos ejecutar todo:
+
+```bash
+npm run test:coverage
+```
