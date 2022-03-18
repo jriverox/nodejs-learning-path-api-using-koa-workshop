@@ -19,7 +19,7 @@ Resalto que en este workshop no estamos usando el enfoque TDD, no porque no me g
 
 La idea de hacer unit test, es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de logica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrias tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en esos componentes.
 
-:eight_spoked_asterisk Antes de empezar a implementar es muy importante que entiendas algunas cosas base, fíjate en el siguiente código el cual es el tipo esqueleto que puedes encontrar usando algunos framwroks de testing de javascript.
+:eight_spoked_asterisk: Antes de empezar a implementar es muy importante que entiendas algunas cosas base, fíjate en el siguiente código el cual es el tipo esqueleto que puedes encontrar usando algunos framwroks de testing de javascript.
 
 ```javascript
 //unit under test (component level)
