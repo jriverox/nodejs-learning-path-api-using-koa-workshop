@@ -743,10 +743,13 @@ npm run test:coverage
 A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de codigo de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de mal alto nivel en la cual se deben consumir capas o componentes mas internos, incluso sin necesidad de crear un mock para componentes externos como librerías, apis o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
 
 Te muestro dos imagenes que me parece que explican por si mismas la diferencia:
+
 Unit Test
+
 ![Unit Test](images/unit-test-simil.jpg)
 
 Integration Test
+
 ![Integration Test](images/integration-test-simil.jpg)
 
 Basta de tanta teorñia y vamos a los pasos de implementación:
