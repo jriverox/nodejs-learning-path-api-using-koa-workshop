@@ -744,17 +744,18 @@ A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de co
 
 Te muestro dos imagenes que me parece que explican por si mismas la diferencia:
 
-Unit Test
+`Unit Test`
 
 ![Unit Test](images/unit-test-simil.jpg)
 
-Integration Test
+`Integration Test`
 
 ![Integration Test](images/integration-test-simil.jpg)
 
-Basta de tanta teorñia y vamos a los pasos de implementación:
+Basta de tanta teoría y vamos a los pasos de implementación:
 
 1. Instalamos supertest
+
 ```bash
 npm i --save-dev supertest
 ```
