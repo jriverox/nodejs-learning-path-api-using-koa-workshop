@@ -2,6 +2,7 @@ const request = require('supertest');
 const bcrypt = require('bcrypt');
 const userModel = require('../../src/models/user.model');
 const app = require('../../src/app');
+const user = require('../mock-data/user.json');
 
 jest.mock('bcrypt');
 
@@ -14,9 +15,8 @@ describe('Auth API', () => {
     done();
   });
   //REGISTRO DE USUARIO
-  describe('auth/signup', () => {
+  describe('signup', () => {
     it('When try to register new user with valid data and username that does not exist, should return statusCode 201', async () => {
-      const user = { username: 'user1', password: 'secret' };
       userModel.findOne = jest.fn().mockResolvedValue(null);
       userModel.create = jest.fn().mockResolvedValue({});
 
@@ -33,7 +33,6 @@ describe('Auth API', () => {
     });
 
     it('When try to register new user with valid data but the username is already exists, should return statusCode 422', async () => {
-      const user = { username: 'user1', password: 'secret' };
       userModel.findOne = jest.fn().mockResolvedValue(user);
       userModel.create = jest.fn().mockResolvedValue({});
 
@@ -51,9 +50,8 @@ describe('Auth API', () => {
   });
 
   //AUTENCICACION Y GENERACION DE TOKEN
-  describe('auth/signin', () => {
+  describe('signin', () => {
     it('When try to signin with valid credentials, should return statusCode 200 and a new token', async () => {
-      const user = { username: 'user1', password: 'secret' };
       userModel.findOne = jest.fn().mockResolvedValue(user);
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       const agent = request(app.callback());
@@ -72,7 +70,6 @@ describe('Auth API', () => {
     });
 
     it('When try to signin with wrong username, should return statusCode 401 (Unauthorized)', async () => {
-      const user = { username: 'user1', password: 'secret' };
       userModel.findOne = jest.fn().mockResolvedValue(null);
       //bcrypt.compare = jest.fn().mockResolvedValue(true);
       const agent = request(app.callback());
@@ -86,7 +83,6 @@ describe('Auth API', () => {
     });
 
     it('When try to signin with valid username but wrong password, should return statusCode 401 (Unauthorized)', async () => {
-      const user = { username: 'user1', password: 'secret' };
       userModel.findOne = jest.fn().mockResolvedValue(user);
       bcrypt.compare = jest.fn().mockResolvedValue(false);
       const agent = request(app.callback());

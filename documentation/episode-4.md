@@ -2,7 +2,7 @@
 
 Para el manejo de errores, usaremos la librería [winston](https://www.npmjs.com/package/winston) para logear los errores, aunque podriamos usar cualquier otra librería esto de hecho no es lo más relevante, ya que lo importante es manejar de manera centralizada los errores e incluso disponer de nuetra lógica de negocio para gestionar los errores de manera consistentemente.
 
-Aunque aqui muestro una manera muy sencilla donde centralzar los errores, hoy  en día hay excelentes opciones que los proyectos profesionales suelen usar, por ejemplo usar Elastic Stack donde puedes almacenar los logs en Elasticsearch y visualizarlos con Kibana, otra muy buena opción el la dupla de Grafana y Prometheus.
+Aunque aqui muestro una manera muy sencilla donde centralzar los errores, hoy en día hay excelentes opciones que los proyectos profesionales suelen usar, por ejemplo usar Elastic Stack donde puedes almacenar los logs en Elasticsearch y visualizarlos con Kibana, otra muy buena opción el la dupla de Grafana y Prometheus.
 
 Te invito a darle un vistazo a este [excelente documento de mejores parcticas](https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices)
 
@@ -220,7 +220,7 @@ const validateSchema = (schema) => (ctx, next) => {
 module.exports = validateSchema;
 ```
 
-9. Modifquemos el controlador **_contacts.controller.js_** ahora ya no validamos si los parametros son inválidos, porque el schema-validator que usamos en contacts.route lo hace por nosotros.
+9. Modifquemos el controlador **_contacts.controller.js_** ahora ya no validamos si los parametros son inválidos, porque el schema-validator que usamos en contacts.route lo hace por nosotros. Asimismo para que use el error factory en lugar de ctx.throw.
 
 ```javascript
 const contactModel = require('../models/contact.model');
@@ -260,7 +260,59 @@ module.exports.save = async (ctx) => {
 };
 ```
 
-10. Tambien vamos a modificar el archivo **_middleware/auth.js_** y reemplazar \*_ctx.throw(401, 'Invalid Token')_ por el uso del ErrorFactory:
+10.  También ncesitamos modificar el controlador **_auth.controller.js_** apara use el error factory en lugar de ctx.throw.
+
+```javascript
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const yenv = require('yenv');
+const userModel = require('../models/user.model');
+const { InvalidInputError, UnauthorizedError } = require('../utils/logging/error-factory');
+
+const env = yenv();
+
+module.exports.signUp = async (ctx) => {
+  const { username, password } = ctx.request.body;
+  // validar que el usuario exista
+  const found = await userModel.findOne({ username });
+
+  if (found) {
+    throw InvalidInputError(`Usuario ${username} ya existe`);
+  } else {
+    // crear un hash del password para no almacenarlo en texto plano en la bd
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newUser = { username, password: hashedPassword };
+    // guardar el usuario en la bd
+    await userModel.create(newUser);
+    // devolver 201 para indicar que sea a creado el recurso (usuario)
+    ctx.response.status = 201;
+  }
+};
+
+module.exports.signIn = async (ctx) => {
+  const { username, password } = ctx.request.body;
+  const user = await userModel.findOne({ username });
+  const tokenExpirationHours = env.TOKEN_EXPIRATION_HOURS
+    ? parseInt(env.TOKEN_EXPIRATION_HOURS, 10)
+    : 24;
+  if (user && (await bcrypt.compare(password, user.password))) {
+    const token = jwt.sign(
+      // eslint-disable-next-line no-underscore-dangle
+      { user_id: user._id, username: user.username },
+      env.TOKEN_KEY,
+      { expiresIn: `${tokenExpirationHours}h` },
+    );
+
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + tokenExpirationHours);
+    ctx.body = { access_token: token, token_expires: expirationDate };
+  } else {
+    throw UnauthorizedError('Usuario o password incorectos');
+  }
+};
+```
+11.  Tambien vamos a modificar el archivo **_middleware/auth.js_** y reemplazar \*_ctx.throw(401, 'Invalid Token')_ por el uso del ErrorFactory:
 
 ```javascript
 const jwt = require('jsonwebtoken');
@@ -285,7 +337,7 @@ module.exports.verifyToken = (ctx, next) => {
 };
 ```
 
-11. Creamos un nuevo archivo llamado **_log-manager.js_** dentro de la carpeta **_logging_**. Este solo es un wrapper de winston, ya que nos facilita que si cambiamos por otra libreria no impacte las otras partes de nuestro código.
+12. Creamos un nuevo archivo llamado **_log-manager.js_** dentro de la carpeta **_logging_**. Este solo es un wrapper de winston, ya que nos facilita que si cambiamos por otra libreria no impacte las otras partes de nuestro código.
 
 ```javascript
 const winston = require('winston');
@@ -333,7 +385,7 @@ module.exports = class LogManager {
 };
 ```
 
-12. Agreguemos la configuración del logger winston en el archivo de configuración env.yaml, agregalo debajo de MONGODB_URL
+13. Agreguemos la configuración del logger winston en el archivo de configuración env.yaml, agregalo debajo de MONGODB_URL
 
 ```yaml
 LOGGER:
@@ -344,7 +396,7 @@ LOGGER:
       PATH: 'error.log'
 ```
 
-13. Ahora debemos modificar el **_server.js_**, las lineas nuevas y modificadas tienen el comentario **_linea agregada en este paso:_**
+14. Ahora debemos modificar el **_server.js_**, las lineas nuevas y modificadas tienen el comentario **_linea agregada en este paso:_**
 
 ```javascript
 /* eslint-disable no-console */
@@ -402,4 +454,4 @@ mongoose
   });
 ```
 
-14. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o eliminalo del header del request. Aparte de tener un mejor manejo de los errores, si te das cuenta en la raiz del proyecto vas a encontrar un archivo ***error.log*** en el cual se logean los errores gracias a winston y todo el codigo que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrias tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerias que se conectan con plataformas como elasticsearch.
+15. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o eliminalo del header del request. Aparte de tener un mejor manejo de los errores, si te das cuenta en la raiz del proyecto vas a encontrar un archivo **_error.log_** en el cual se logean los errores gracias a winston y todo el codigo que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrias tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerias que se conectan con plataformas como elasticsearch.

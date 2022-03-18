@@ -71,9 +71,9 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
 
 - [Episodio 1: Creando mi primera API rest en Node.js y MongoDB](./documentation/episode-1.md)
 - [Episodio 2: Protegiendo el acceso del API](./documentation/episode-2.md)
-- [Episodio 3: Implementando validaciones de request](./documentation/episode-3.md)
-- [Episodio 4: Implementando el manejo de errores](./documentation/episode-4.md)
-- [Episodio 5: Implementando Unit Tests](./documentation/episode-5.md)
+- [Episodio 3: Validando los Requests](./documentation/episode-3.md)
+- [Episodio 4: Manejo de Errores](./documentation/episode-4.md)
+- [Episodio 5: Unit Tests + Integration Tests](./documentation/episode-5.md)
 
 ## Stack
 

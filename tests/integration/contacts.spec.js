@@ -18,7 +18,7 @@ describe('Contacts API', () => {
     done();
   });
 
-  describe('GET /contact/:index', () => {
+  describe('GET contact by index', () => {
     it('When pass an index of existing contact and valid token, should return the success and statusCode 200', async () => {
       const contact = {
         index: 1000,
@@ -89,7 +89,7 @@ describe('Contacts API', () => {
   });
 
   // ACTUALIZACION DE CONTACTOS
-  describe('PUT /contact/:index', () => {
+  describe('Update Contact', () => {
     it('When pass correct data of a contact that exists and a valid token, should return statusCode 200', async () => {
       const body = { ...contactMockData };
       const contactFound = {
@@ -175,7 +175,7 @@ describe('Contacts API', () => {
   });
 
   //CREACION DE CONTACTOS
-  describe('POST /contact/', () => {
+  describe('Create Contact', () => {
     it('When try to create a contact with correct data and a valid token, should return statusCode 201', async () => {
       const body = { ...contactMockData };
       const lastIndex = 1000;

@@ -4,8 +4,11 @@
   "description": "nodejs-learning-path-api-using-koa-worksho",
   "main": "src/server.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development jest --silent=false",
+    "test": "cross-env NODE_ENV=development jest",
+    "test:unit": "cross-env NODE_ENV=development jest --verbose ./tests/unit --coverage",
+    "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage",
     "test:coverage": "cross-env NODE_ENV=development jest --coverage",
+    "sonar": "node sonar-project.js",
     "start": "cross-env NODE_ENV=development nodemon ./src/server.js",
     "lint:show": "eslint src/ -f stylish",
     "lint:fix": "eslint --fix --ext .js ."
@@ -50,8 +53,11 @@
     "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.5.1",
+    "jest-sonar": "^0.2.12",
+    "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
+    "sonarqube-scanner": "^2.8.1",
     "supertest": "^6.2.2"
   }
 }
