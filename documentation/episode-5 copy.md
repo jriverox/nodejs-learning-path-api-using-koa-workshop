@@ -4,108 +4,14 @@
 
 - [Episodio 5: Unit Tests + Integration Tests](#episodio-5-unit-tests--integration-tests)
   - [Tabla de Contenido](#tabla-de-contenido)
-  - [Introducción](#introducción)
-  - [Referencias que te recomiendo leer](#referencias-que-te-recomiendo-leer)
-  - [Paquetes NPM que vamos a utilizar](#paquetes-npm-que-vamos-a-utilizar)
+  - [Paquetes NPM que vamos a utilizar:](#paquetes-npm-que-vamos-a-utilizar)
   - [Pasos para implementar](#pasos-para-implementar)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
 
-## Introducción
-
 En este episodio vamos a implementar dos tipos de pruebas las cuales son muy importantes para asegurar la calidad de un proyecto. El tema de unit testing e integration testing es muy importante de hecho hoy en día muchos proyectos lo tienen como parte del desarrollo y restringen integrar código si las pruebas no tienen la cobertura deseada.
 
-En este ejemplo hemos dejado las pruebas como uno de los últimos episodios, sin embargo, hay prácticas como [TDD](https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas) en las cuales la fase de testing es tan crucial que es una de las primeras etapas antes de implementar cualquier funcionalidad. De hecho el término Test Driven Development (TDD) en español debería traducirse como Desarrollo orientado a Ejemplos, porque cuando implementas los unit tests antes de impolementar el código lo que haces es ir creando una idea de como será tu código plasmado en unos ejemplos.
-
-Resalto que en este workshop no estamos usando el enfoque TDD, no porque no me guste si no para simplificar las explicaciones.
-
-La idea de hacer unit test es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de logica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrias tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en estos componentes.
-
-Antes de empezar a implementar es muy importante que entiendas algunas cosas base, fíjate en el siguiente código el cual es el tipo esqueleto que puedes encontrar usando algunos framwroks de testing de javascript.
-
-```javascript
-//unit under test (component level)
-describe('Contacts Controller', () => {
-  beforeEach(() => {
-    //the code here is executed before each test case
-  });
-
-  //unit under test (feature level)
-  describe('Get Contact by Index', () => {
-    //scenario + expectation
-    it('When pass an index of existing contact, should return statusCode 200', async () => {
-      //Test Implementation
-    });
-
-    //scenario + expectation
-    it('When pass an index of contact that does not exist, should return statusCode 404', async () => {
-      //Test Implementation
-    });
-  });
-
-  //unit under test (feature level)
-  describe('Create Contact', () => {
-    //scenario + expectation
-    it('When try to create a contact with correct data, should return statusCode 201', async () => {
-      //Test Implementation
-    });
-  });
-
-  //unit under test (feature level)
-  describe('Update Contact', () => {
-    //scenario + expectation
-    it('When try update a contact with correct data, should return statusCode 200', async () => {
-     //Test Implementation
-    });
-
-    //scenario + expectation
-    it('When try update a contact with correct data but does not exist, should return statusCode 404', async () => {
-      //Test Implementation
-    });
-  });
-});
-```
-
-El código anterior muestra un ejemplo de como estructurar una prueba siguiendo el patron [Include 3 parts in each test](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/3-parts-in-name.md). Este enfoque habla de 3 partes: 1) `Unidad que estas probando` y la cual es objetivo de la prueba (componente) y feature. Luego en el `it` o `test`(depende del framework, en jest it es un alias de test asi que puedes usar cualquiera de los 2), en los it debes incluir la redacción del 2) `escenario` y la 3) `expectativa` de una manera bien legible y concreta, ejemplo: *When try to create a contact with correct data, should return statusCode 201*.
-
-Dentro de cada `it` o `test`vamos a tener que implementar cada una de las pruebas, un ejemplo para el primer caso sería:
-
-```javascript
-//Test Implementation
-//Arrange
-const contact = {
-  index: 1000,
-  ...contactMockData,
-};
-contactModel.findOne = jest.fn().mockResolvedValue(contact);
-const ctx = createMockContext({
-  method: 'GET',
-  customProperties: { params: { index: 1000 } },
-});
-
-//Act
-await getContactByIndex(ctx);
-
-//Assert
-expect(ctx.status).toBe(200);
-expect(ctx.body).toBe(contact);
-```
-
-En la implementación anterior ves separaciones con los comentarios: `Arrange`, `Act` y `Assert` esto es otra práctica importante que NO debes omitir, de hecho es un patron llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
-
-A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de codigo de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de mal alto nivel en la cual se deben consumir capas o componentes mas internos, incluso sin necesidad de crear un mock para componentes externos como librerías, apis o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
-
-Te muestro dos imagenes que me parece que explican por si mismas la diferencia:
-
-`Unit Test`
-
-<img src="images/unit-test-simil.jpg" alt="unit-test" width="500"/>
-
-`Integration Test`
-
-<img src="images/integration-test-simil.jpg" alt="integration-test" width="500"/>
-
-## Referencias que te recomiendo leer
+En este ejemplo hemos realizado las pruebas de último, pero hay prácticas como [TDD](https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas) que se toman tan en serio la fase de testing que inician con la implementación de Unit testing antes de codificar cualquier funcionalidad.
 
 Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
 
@@ -116,7 +22,7 @@ Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
 y Si quieres profundizar con conocimiento que no vas a encontrar en ningún curso, te exhorto a darle un vistazo a este `Libro Super Recomendado`:
 [Unit Testing Principles, Practices, and Patterns](https://www.amazon.com/-/es/Vladimir-Khorikov/dp/1617296279/ref=sr_1_2?__mk_es_US=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2PPMYW7D6KTJU&keywords=unit+testing+main&qid=1647628112&sprefix=unit+testing+principles%2Caps%2C153&sr=8-2)
 
-## Paquetes NPM que vamos a utilizar
+## Paquetes NPM que vamos a utilizar:
 
 - [jest](https://jestjs.io/docs/getting-started). Framework de testing, incluye asserts y mocks.
 - [@types/jest](https://www.npmjs.com/package/@types/jest). Para contar con intellisense de Jest en VS Code.
@@ -235,9 +141,82 @@ npm i --save-dev jest @types/jest eslint-plugin-jest @shopify/jest-koa-mocks
 
 :eight_spoked_asterisk: Nota: Todos estos json creados hasta aquí los usaremos en las pruebas, los centralizaamos en esta carpeta para evitar duplicar codigo innecesario.
 
-8. Creamos la carpeta `unit` dentro de la carpeta `tests` aqui agregaremos las pruebas unitarias (unit tests).
+8. Ahora creamos la carpeta `unit` dentro de la carpeta `tests` aqui agregaremos las pruebas unitarias (unit tests).
 
-9. Ahora Creamos entonces el archivo `contacts.controller.spec.js` dentro de `tests/unit`:
+:eight_spoked_asterisk: Nota: La idea de hacer unit tests es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de logica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrias tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en estos componentes.
+
+Antes de crear la primera prueba fijate en el siguiente esqueleto:
+
+```javascript
+//unit under test (component level)
+describe('Contacts Controller', () => {
+  beforeEach(() => {
+    //the code here is executed before each test case
+  });
+
+  //unit under test (feature level)
+  describe('Get Contact by Index', () => {
+    //scenario + expectation
+    it('When pass an index of existing contact, should return statusCode 200', async () => {
+      //code implementation of test
+    });
+
+    //scenario + expectation
+    it('When pass an index of contact that does not exist, should return statusCode 404', async () => {
+      //code implementation of test
+    });
+  });
+
+  //unit under test (feature level)
+  describe('Create Contact', () => {
+    //scenario + expectation
+    it('When try to create a contact with correct data, should return statusCode 201', async () => {
+      //code implementation of test
+    });
+  });
+
+  //unit under test (feature level)
+  describe('Update Contact', () => {
+    //scenario + expectation
+    it('When try update a contact with correct data, should return statusCode 200', async () => {
+      //code implementation of test
+    });
+
+    //scenario + expectation
+    it('When try update a contact with correct data but does not exist, should return statusCode 404', async () => {
+      //code implementation of test
+    });
+  });
+});
+```
+
+:eight_spoked_asterisk: Nota: El código anterior muestra un ejemplo de como estructurar una prueba siguiendo el patron [Include 3 parts in each test](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/3-parts-in-name.md). Estar partes son: `Unidad que estas probando` y la cual es objetivo de la prueba (componente) y feature. Luego en el `it` o `test`(depende del framework, en jest it es un alias de test asi que puedes usar cualquiera de los 2), en los it debes incluir la redacción del `escenario` y la `expectativa` de una manera bien legible y concreta, ejemplo: *When try to create a contact with correct data, should return statusCode 201*.
+
+Dentro de cada `it` o `test`vamos a tener que implementar cada una de las pruebas, un ejemplo para el primer caso sería:
+
+```javascript
+//Arrange
+const contact = {
+  index: 1000,
+  ...contactMockData,
+};
+contactModel.findOne = jest.fn().mockResolvedValue(contact);
+const ctx = createMockContext({
+  method: 'GET',
+  customProperties: { params: { index: 1000 } },
+});
+
+//Act
+await getContactByIndex(ctx);
+
+//Assert
+expect(ctx.status).toBe(200);
+expect(ctx.body).toBe(contact);
+```
+
+:eight_spoked_asterisk: Nota: en el codigo ves 3 separaciones con los comentarios: `Arrange`, `Act` y `Assert` esto es otra práctica importante que no debes omitir, de hecho es un patron llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
+
+9. Continuamos con la implementación, ahora si incluyo todo el código de la prueba. Creamos entonces el archivo `contacts.controller.spec.js` dentro de `tests/unit`:
 
 ```javascript
 const { createMockContext } = require('@shopify/jest-koa-mocks');
@@ -763,6 +742,20 @@ npm run test:coverage
 :eight_spoked_asterisk: Nota: esta versión ejecuta todas las pruebas mostrandote la cobertura.
 
 ### Integration Tests
+
+A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de codigo de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de mal alto nivel en la cual se deben consumir capas o componentes mas internos, incluso sin necesidad de crear un mock para componentes externos como librerías, apis o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
+
+Te muestro dos imagenes que me parece que explican por si mismas la diferencia:
+
+`Unit Test`
+
+<img src="images/unit-test-simil.jpg" alt="unit-test" width="500"/>
+
+`Integration Test`
+
+<img src="images/integration-test-simil.jpg" alt="integration-test" width="500"/>
+
+Basta de tanta teoría y vamos a los pasos de implementación:
 
 1. Instalamos supertest
 
