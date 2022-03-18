@@ -15,11 +15,11 @@ y Si quieres profundizar con conocimiento que no vas a encontrar en ningún curs
 
 ## Paquetes NPM que vamos a utilizar:
 
-[jest](https://jestjs.io/docs/getting-started). Framework de testing, incluye asserts y mocks.
-[@types/jest](https://www.npmjs.com/package/@types/jest). Para contar con intellisense de Jest en VS Code.
-[@shopify/jest-koa-mocks](https://www.npmjs.com/package/@shopify/jest-koa-mocks). Util crear mock del objeto context de Koa que contiene los datos del request y response http.
-[eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest). Nos ayuda a seguir las mejores prácticas (sintaxis) y anticipar errores comunes al escribir pruebas.
-[supertest](https://www.npmjs.com/package/supertest). Necesario para las pruebas de integración porque nos permite levantar y ejecutar solicitudes http de nuestras routes (en el contexto de cada prueba).
+- [jest](https://jestjs.io/docs/getting-started). Framework de testing, incluye asserts y mocks.
+- [@types/jest](https://www.npmjs.com/package/@types/jest). Para contar con intellisense de Jest en VS Code.
+- [@shopify/jest-koa-mocks](https://www.npmjs.com/package/@shopify/jest-koa-mocks). Util crear mock del objeto context de Koa que contiene los datos del request y response http.
+- [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest). Nos ayuda a seguir las mejores prácticas (sintaxis) y anticipar errores comunes al escribir pruebas.
+- [supertest](https://www.npmjs.com/package/supertest). Necesario para las pruebas de integración porque nos permite levantar y ejecutar solicitudes http de nuestras routes (en el contexto de cada prueba).
 
 ## Pasos para implementar
 
@@ -121,7 +121,7 @@ npm i --save-dev jest @types/jest eslint-plugin-jest @shopify/jest-koa-mocks
 }
 ```
 
-1. Dentro de `mock-data` creamos el archivo `user.json`:
+7. Dentro de `mock-data` creamos el archivo `user.json`:
 
 ```json
 {
@@ -134,7 +134,7 @@ npm i --save-dev jest @types/jest eslint-plugin-jest @shopify/jest-koa-mocks
 
 8. Ahora creamos la carpeta `unit` dentro de la carpeta `tests` aqui agregaremos las pruebas unitarias (unit tests).
 
-:eight_spoked_asterisk: Nota: La idea de hacer unit tests es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de logica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrias tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos a estos componentes.
+:eight_spoked_asterisk: Nota: La idea de hacer unit tests es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de logica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrias tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en estos componentes.
 
 Antes de crear la primera prueba fijate en el siguiente esqueleto:
 
@@ -181,7 +181,7 @@ describe('Contacts Controller', () => {
 });
 ```
 
-:eight_spoked_asterisk: Nota: El coódigo anterior muestra un ejemplo de como estructurar una prueba siguiente el patron [Include 3 parts in each test](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/3-parts-in-name.md), los cuale son: Unidad que estas probando y la cual es objetivo de la prueba (componente) y feature. Luego en el `it` o `test`(depende del framework, en jest it es un alias de test asi que puedes usar cualquiera de los 2) debes incluir la redacción del escenario y la expectativa de una manera bien legible y concreta, ejemplo: When try to create a contact with correct data, should return statusCode 201.
+:eight_spoked_asterisk: Nota: El código anterior muestra un ejemplo de como estructurar una prueba siguiendo el patron [Include 3 parts in each test](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/3-parts-in-name.md). Estar partes son: `Unidad que estas probando` y la cual es objetivo de la prueba (componente) y feature. Luego en el `it` o `test`(depende del framework, en jest it es un alias de test asi que puedes usar cualquiera de los 2), en los it debes incluir la redacción del `escenario` y la `expectativa` de una manera bien legible y concreta, ejemplo: *When try to create a contact with correct data, should return statusCode 201*.
 
 Dentro de cada `it` o `test`vamos a tener que implementar cada una de las pruebas, un ejemplo para el primer caso sería:
 
@@ -205,9 +205,9 @@ expect(ctx.status).toBe(200);
 expect(ctx.body).toBe(contact);
 ```
 
-:eight_spoked_asterisk: Nota: en el codigo ves 3 separaciones con los comentarios: Arrange, Act y Assert esto es otra práctica importante que no debes omitir, de hecho es un patron llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
+:eight_spoked_asterisk: Nota: en el codigo ves 3 separaciones con los comentarios: `Arrange`, `Act` y `Assert` esto es otra práctica importante que no debes omitir, de hecho es un patron llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
 
-9. Continuamos con la implementación, ahora si incluyo todo el còdigo de la prueba. Creamos entonces el archivo `contacts.controller.spec.js` dentro de `tests/unit`:
+9. Continuamos con la implementación, ahora si incluyo todo el código de la prueba. Creamos entonces el archivo `contacts.controller.spec.js` dentro de `tests/unit`:
 
 ```javascript
 const { createMockContext } = require('@shopify/jest-koa-mocks');
@@ -445,7 +445,9 @@ describe('Auth API', () => {
 });
 ```
 
-:eight_spoked_asterisk: Nota: Implementamos ahora las pruebas de los dos middleware mas importantes que no se cubren con las pruebas unitarias de los dos pasos anteriores. 11. Creamos el archivo `auth.middleware.spec.js` dentro de `tests/unit`:
+:eight_spoked_asterisk: Nota: Implementamos ahora las pruebas de los dos middleware mas importantes que no se cubren con las pruebas unitarias de los dos pasos anteriores.
+
+11. Creamos el archivo `auth.middleware.spec.js` dentro de `tests/unit`:
 
 ```javascript
 const { createMockContext } = require('@shopify/jest-koa-mocks');
@@ -523,7 +525,7 @@ describe('Token Verification', () => {
 });
 ```
 
-12. y finalmente implementamos la prueba sobre el schema-validator, ceramos el archivo `schema-validator.middleware.spec.js` con el código:
+12. Finalmente implementamos la prueba sobre el schema-validator, ceramos el archivo `schema-validator.middleware.spec.js` con el código:
 
 ```javascript
 const { createMockContext } = require('@shopify/jest-koa-mocks');
@@ -669,7 +671,7 @@ describe('Contact Schema Validator', () => {
 });
 ```
 
-13. Aun nos faltan unos pocos ajustes, creamos el archivo `jest.config.js` en la raíz del proyecto:
+13. Aún nos faltan unos pocos ajustes, creamos el archivo `jest.config.js` en la raíz del proyecto:
 
 ```javascript
 module.exports = {
@@ -683,7 +685,7 @@ module.exports = {
 };
 ```
 
-:eight_spoked_asterisk: Nota: En sste archivo podemos establecer muchas opciones como donde estará nuestro reporte de cobertura, elemntos a ignorar en la cobertura, pugins con sonaqube. Fijate que hemos establecido `coveragePathIgnorePatterns`con 3 archivos que no nos inetersa hacer pruebas unitarias ya que no tienen implementación importante. node_modules se ignora por defecto es decir si quitas coveragePathIgnorePatterns se ignorara esa coarpeta pero si lo establece explicitamente deberás incluirla.
+:eight_spoked_asterisk: Nota: En este archivo podemos establecer muchas opciones como donde estará nuestro reporte de cobertura, elementos a ignorar en la cobertura, plugins como sonaqube. Fíjate que hemos establecido `coveragePathIgnorePatterns` con 3 archivos que no nos interesa hacer pruebas unitarias ya que no tienen implementación importante. Algo importante es que node_modules se ignora por defecto, es decir, si quitas coveragePathIgnorePatterns se ignorará esa carpeta pero si lo establece explicitamente deberás incluirla.
 
 14. Ahora editamos el archivo `package.json` y asegurate que esté el siguiente código en los script:
 
