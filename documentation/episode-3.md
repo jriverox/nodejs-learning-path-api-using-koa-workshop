@@ -1,9 +1,10 @@
 # Episodio 3: Validando los Requests
 
 La idea de este episodio es implementar un mecanismo de validación para los endpoints:
--`GET /contacts/:index` que llama a `contacts.controller.getByIndex` para obtener un contacto por el campo index.
--`POST /contacts/` que invoca al `contacts.controller.createContact` para crear un contacto.
--`PUT /contacts/:index`que invoca al `contacts.controller.updateContact` para actualizar un contacto.
+
+- `GET /contacts/:index` que llama a `contacts.controller.getByIndex` para obtener un contacto por el campo index.
+- `POST /contacts/` que invoca al `contacts.controller.createContact` para crear un contacto.
+- `PUT /contacts/:index`que invoca al `contacts.controller.updateContact` para actualizar un contacto.
 
 Tal vez lo primero que pudieras pensar es implementar las validaciones con *if*, pero aqui es donde *joi* nos aporta algo ineteresante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
 
