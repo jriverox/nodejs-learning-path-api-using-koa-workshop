@@ -20,21 +20,23 @@
 
 ## Acerca de
 
-Hola gente!! Si te fijas en el nombre del repositorio ***nodejs-learning-path-api-using-koa-workshop***. Mi idea es ir creando una serie de repositorios acompañados de documentación los cuales sirvan para aquellas personas que desean profundizar su conocimeinto en Node.js y desean conocer algunas herramientas, prácticas, frameworks para convertirse un desarrollador backend pro. Proximamente estaré creando más contenido que aborde temas que hoy dia son necesarios en el campo laboral del mundo real. Espero que encuentres este contenido interesante y si lo aprecias te invito a darle una estrella en github :-)
+Hola gente!! Si te fijas en el nombre del repositorio *nodejs-learning-path-api-using-koa-workshop*. Mi idea es ir creando una serie de repositorios acompañados de documentación los cuales sirvan para aquellas personas que desean profundizar su conocimeinto en Node.js y desean conocer algunas herramientas, prácticas, frameworks para convertirse un desarrollador backend pro. Proximamente estaré creando más contenido que aborde temas que hoy dia son necesarios en el campo laboral del mundo real.
+
+Espero que encuentrés este contenido útil y si lo aprecias te invito a darle una :star: en github :smiley:
 
 ## Introducción
 
-En este Workshop está dirigido a desarrolladores que quieren aprender como construir una API Rest usando Node.js y [Koa.js](https://koajs.com/#introduction).
+En este Workshop está dirigido a desarrolladores que quieren aprender o reforzar como construir una `API Rest` usando [Node.js](https://nodejs.org/) y [Koa.js](https://koajs.com/#introduction).
 
-Por si aun no conoces Koa.js, te cuento que se trata de un web framework es decir es una alternativa mas ligera a Express.js (incluso construido por el mismo team de Express).
+Por si aun no conoces Koa.js, te cuento que se trata de un web framework es decir es una alternativa mas ligera a [Express.js](https://expressjs.com/es/) (incluso construido por el mismo team de Express).
 
-Dividiremos este taller en **4 partes** que llamaremos Episodios, en cada uno agregaremos algún complemento que nos ayudará a entender cómo nuestra API irá evolucionando con el fin de añadirle funcionalidades técnicas que vas a necesitar en el mundo real.
+Dividiremos este taller en `4 partes que llamaremos Episodios`, en cada uno agregaremos algún complemento que nos ayudará a entender cómo nuestra API irá evolucionando con el fin de añadirle funcionalidades técnicas que vas a necesitar en el mundo real.
 
 Quieres saber el contenido de los epidosdios? ve a la sección [Episodios](#episodios)
 
 ## Explicación del Caso de Uso
 
-Esta API de ejemplo es muy simple, expondrá algunos métodos para poder consultar los datos de contactos que tenemos en una base de datos de MongoDB. Tambien nos permitirá crear nuevos contactos o actualziar sus datos.
+Esta API de ejemplo es muy simple, expondrá algunos métodos para poder obtener (GET) un contacto que tenemos en una base de datos de MongoDB. Tambien nos permitirá crear nuevos contactos (POST) o actualizar sus datos (PUT).
 
 ## Ciclo de Vida de las Solicitudes HTTP en nuestra API
 
@@ -69,12 +71,12 @@ Antes de empezar revisa ue cumplas con los siguientes requisitos:
 
 Como se mencionó anterioremente la idea es implementar una API Rest para cubrir las necesidades de indicadas en el Caso de Uso. Pero la idea es ofrecer varios enfoques:
 
-- [Episodio 1: Creando mi primera API rest en Node.js y MongoDB](./documentation/episode-1.md)
+- [Episodio 1: Creando un API rest con Node.js, Koa.js y MongoDB](./documentation/episode-1.md)
 - [Episodio 2: Protegiendo el acceso del API](./documentation/episode-2.md)
-- [Episodio 3: Implementando validaciones de request](./documentation/episode-3.md)
-- [Episodio 4: Implementando el manejo de errores](./documentation/episode-4.md)
-- [Episodio 5: Documentando con Open API (conocido como Swagger)](./documentation/episode-5.md)
-- [Episodio 6: Implementando Unit Tests](./documentation/episode-5.md)
+- [Episodio 3: Validando los Requests](./documentation/episode-3.md)
+- [Episodio 4: Manejo de Errores](./documentation/episode-4.md)
+- [Episodio 5: Unit Tests + Integration Tests](./documentation/episode-5.md)
+- [Episodio 6: Evaluando el Código usando SonaQube](./documentation/episode-6.md)
 
 ## Stack
 
@@ -87,35 +89,61 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
 - [winston](https://github.com/winstonjs/winston#readme) - Un logger poderoso y popular en node.js
 - [yenv](https://github.com/jeffijoe/yenv#readme) - Nos permite manejar variables de entorno desde un archivo YAML
 - [jest](https://github.com/facebook/jestt) - Un framework muy popular para Testing
-- [node-mocks-http](https://github.com/howardabrams/node-mocks-http) - Librería para mocks http para testing de express y koa
+- [@shopify/jest-koa-mocks](https://www.npmjs.com/package/@shopify/jest-koa-mocks). - Librería para mocks http para testing en koa
 - [supertest](https://github.com/visionmedia/supertest#readme) - Modulo que nos permite realizar pruebas de solicitudes http
 - [cross-env](https://github.com/kentcdodds/cross-env#readme) - Facilita establecer el valor de la variable de entorno NODE_ENV
 
 ## Estructura del Proyecto
 
 ```
-|-- api-node-koa-workshop
-    |-- .editorconfig
-    |-- .eslintignore
-    |-- .eslintrc.yml
-    |-- .gitignore
-    |-- env-example.yaml
-    |-- env.yaml
-    |-- package-lock.json
-    |-- package.json
-    |-- README.md
-    |-- src
-        |-- routes.js
-        |-- server.js
-        |-- controllers
-        |   |-- person.controller.js
-        |-- models
-        |   |-- person.model.js
-        |-- repositories
-        |   |-- person.repository.js
-        |-- routes
-        |   |-- person.route.js
-        |-- schemas
-        |   |-- person.schema.js
-        |-- utils
+📦api-node-koa-workshop
+  📦src
+  ┣ 📂controllers
+  ┃ ┣ 📜auth.controller.js
+  ┃ ┗ 📜contacts.controller.js
+  ┣ 📂middleware
+  ┃ ┣ 📜auth.js
+  ┃ ┣ 📜error-handler.js
+  ┃ ┗ 📜schema-validator.js
+  ┣ 📂models
+  ┃ ┣ 📜contact.model.js
+  ┃ ┗ 📜user.model.js
+  ┣ 📂routes
+  ┃ ┣ 📜auth.route.js
+  ┃ ┗ 📜contacts.route.js
+  ┣ 📂schemas
+  ┃ ┗ 📜contacts.schema.js
+  ┣ 📂utils
+  ┃ ┗ 📂logging
+  ┃ ┃ ┣ 📜app-error.js
+  ┃ ┃ ┣ 📜common-errors.js
+  ┃ ┃ ┣ 📜error-factory.js
+  ┃ ┃ ┗ 📜log-manager.js
+  ┣ 📜app.js
+  ┣ 📜routes.js
+  ┗ 📜server.js
+  📦tests
+  ┣ 📂integration
+  ┃ ┣ 📜auth.spec.js
+  ┃ ┗ 📜contacts.spec.js
+  ┣ 📂mock-data
+  ┃ ┣ 📜contact.json
+  ┃ ┣ 📜contacts-invalid-cases.json
+  ┃ ┣ 📜token.json
+  ┃ ┗ 📜user.json
+  ┗ 📂unit
+  ┃ ┣ 📜auth.controller.spec.js
+  ┃ ┣ 📜auth.middleware.spec.js
+  ┃ ┣ 📜contacts.controller.spec.js
+  ┃ ┗ 📜schema-validator.middleware.spec.js
+  ┣ 📜.editorconfig
+  ┣ 📜.eslintrc.yml
+  ┣ 📜.gitignore
+  ┣ 📜.prettierrc.js
+  ┣ 📜LICENSE
+  ┣ 📜README.md
+  ┣ 📜env.yaml
+  ┣ 📜jest.config.js
+  ┣ 📜package-lock.json
+  ┣ 📜package.json
 ```
