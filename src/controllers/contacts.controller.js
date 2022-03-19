@@ -1,4 +1,5 @@
 const contactModel = require("../models/contact.model");
+const { NotFoundError } = require('../utils/logging/error-factory');
 
 /**
  *
@@ -14,7 +15,7 @@ module.exports.getContactByIndex = async (ctx) => {
     ctx.body = data;
   } else {
     // codigo agregado en este paso: Manejamos los errores operacionales usando nuestra fabrica de errores
-    ctx.throw(404, `No se ha encontrado la contacto con el indice ${index}`);
+    throw NotFoundError(`No se ha encontrado la persona con el indice ${index}`);
   }
 };
 
@@ -32,7 +33,7 @@ module.exports.updateContact = async (ctx) => {
   const found = await contactModel.exists(filter);
 
   if (!found) {
-    ctx.throw(404, `No se ha encontrado la contacto con el indice ${index}`);
+    throw NotFoundError(`No se ha encontrado la persona con el indice ${index}`);
   } else {
     await contactModel.updateOne(filter, contact, options);
     ctx.body = contact;

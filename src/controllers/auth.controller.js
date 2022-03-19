@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
 const userModel = require('../models/user.model');
+// codigo agregado en este paso
+const { InvalidInputError, UnauthorizedError } = require('../utils/logging/error-factory');
 
 const env = yenv();
 
@@ -10,7 +12,8 @@ module.exports.signUp = async (ctx) => {
   // validar que el usuario exista
   const found = await userModel.findOne({ username });
   if (found) {
-    ctx.throw(422, `Usuario ${username} ya existe`);
+    // codigo agregado en este paso
+    throw InvalidInputError(`Usuario ${username} ya existe`);
   } else {
     // crear un hash del password para no almacenarlo en texto plano en la bd
     const salt = await bcrypt.genSalt();
@@ -41,6 +44,7 @@ module.exports.signIn = async (ctx) => {
     // devolvemos el token que por las proximas 2h podra usar para autenticarse
     ctx.body = { access_token: token, token_expires: expirationDate };
   } else {
-    ctx.throw(422, 'Usuario o password incorectos');
+    // codigo agregado en este paso
+    throw UnauthorizedError('Usuario o password incorectos');
   }
 };

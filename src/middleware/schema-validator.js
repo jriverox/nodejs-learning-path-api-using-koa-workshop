@@ -1,3 +1,5 @@
+const { UnknownError, InvalidInputError } = require('../utils/logging/error-factory');
+
 /**
  *
  * @param {object} contextPart propiedad del objeto context: ctx.headers | ctx.params | ctx.query | ctx.request.body
@@ -9,7 +11,7 @@
   if (schema) {
     const { error } = schema.validate(contextPart, options);
     if (error) {
-      throw new Error(`Invalid ${label} - ${error.message}`);
+      throw UnknownError(`Invalid ${label} - ${error.message}`);
     }
   }
 };
@@ -33,7 +35,7 @@ const validateSchema = (schema) => (ctx, next) => {
     // invocar a la funcion sigueinte de la cadena (esto es importante en el cocepto de un middleware, porque son funciones previas que se ejecutan antes de llamar al metodo del controlador)
     return next();
   } catch (error) {
-    ctx.throw(422, error.message);
+    throw InvalidInputError(`Solicitud no válida: ${error.message}`);
   }
 };
 

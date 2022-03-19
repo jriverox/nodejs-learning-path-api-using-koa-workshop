@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
+// codigo agregado en este paso
+const { UnauthorizedError } = require('../utils/logging/error-factory');
 
 const env = yenv();
 
@@ -8,14 +10,16 @@ module.exports.verifyToken = (ctx, next) => {
   const token = ctx.request.headers['x-access-token'];
   // si es nulo devolvemos un error 403
   if (!token) {
-    ctx.throw(403, 'A token is required for authentication');
+    // codigo agregado en este paso
+    throw UnauthorizedError('A token is required for authentication');
   }
   try {
     // decodificamos el token usando la libreria
     const decoded = jwt.verify(token, env.TOKEN_KEY);
     ctx.request.user = decoded;
   } catch (err) {
-    ctx.throw(401, 'Invalid Token');
+    // codigo agregado en este paso
+    throw UnauthorizedError('Invalid Token');
   }
   return next();
 };
