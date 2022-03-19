@@ -34,7 +34,7 @@ npm i --save-dev nodemon
 - `controllers`
 - `routes`
 
-11. Dentro de la carpeta `models` creamos `contact.model.js` con el siguiente código:
+11.  Dentro de la carpeta `models` creamos `contact.model.js` en el cual usaremos mongoose como repositorio para enviarle las peticiones a MongDB a la colección de contacts.
 
 ```javascript
 /**
@@ -112,8 +112,7 @@ const contactModel = model("ContactModel", contactSchema);
 module.exports = contactModel;
 ```
 
-14. Dentro de la carpeta `controllers` creamos `contacts.controller.js` con el siguiente código:
-
+12.  Dentro de la carpeta `controllers` creamos `contacts.controller.js` el cual será el encargado de recibir las peticiones y aplicar la lógica de negocio y finalmente invocar a la capa de datos (modelos).
 ```javascript
 const contactModel = require("../models/contact.model");
 
@@ -167,7 +166,7 @@ module.exports.createContact = async (ctx) => {
 };
 ```
 
-12. Dentro de la carpeta `routes` creamos `contacts.route.js` con el siguiente código:
+13.  Dentro de la carpeta `routes` creamos `contacts.route.js`, este archivo contendrá las declaraciones de los endpoints o rutas para /contacts (GET, POST, PUT), recibe las peticiones directamente y ejecuta todos los middleware hasta invocar al controlador:
 
 ```javascript
 const KoaRouter = require("koa-router");
@@ -191,7 +190,7 @@ router.put("/put", "/:index", updateContact);
 module.exports = router;
 ```
 
-13. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo `routes.js` dentro de `src` con el siguiente codigo:
+14. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo `routes.js` dentro de `src` con el siguiente codigo:
 
 ```javascript
 /**
@@ -203,7 +202,7 @@ const personRoute = require("./routes/contacts.route");
 module.exports = [personRoute];
 ```
 
-14. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
+15. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
 
 ```javascript
 /* eslint-disable no-console */
@@ -243,7 +242,7 @@ mongoose
   });
 ```
 
-15. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
+16. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
 
 ```yaml
 development:
@@ -258,11 +257,13 @@ production:
 
 Otro punto importante acerca de la variable `MONGODB_URL` la cual contiene la cadena de conexión de la BD de MongoDB, el valor que deberás establecer dependerá de donde estes ejecutando la BD y si tiene credenciales o no. En el caso mostrado mas arriba (mongodb://localhost:27017/contacts_demo) no tiene ni password ni usuario, esto es una práctica insegura pero obviamente para fines de prueba está bien.
 
-16. Ahora agregaremos el nombre del archivo `env.yaml` al archivo `.gitignore`, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva `env.yaml`
+17. Ahora agregaremos el nombre del archivo `env.yaml` al archivo `.gitignore`, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva `env.yaml`
 
 ## Probemos nuestra API
 
-Hasta aquí hemos implementado el código para construir nuestra api, pero y como :smiling_imp: puedo ponerla en marcha y probarla!!
+Hasta aquí hemos implementado el código para construir nuestra api, pero y como puedo ponerla en marcha y probarla!!
+
+:eight_spoked_asterisk: Nota: te recuerdo nuevamente que deberías disponer de una base de datos en MongoDB y que en la sección [Requisitos/Super Importante del Readme principal](../README.md#super-importante) encontrás como ejecutar Mongo en Docker y crear una base de datos, así como importar los datos desde un json de ejemplo que he puesto a disposición.
 
 1. Abrimos el archivo `package.json` que esta en la raiz y agrega dentro de la sección `scripts` la siguiente linea:
 
@@ -331,7 +332,6 @@ http://localhost:3000/contacts/1
     "city": "Coaldale",
     "state": "American Samoa"
   },
-  "index": 1,
   "dateOfBirth": "1994-10-26",
   "firstName": "Farrell",
   "lastName": "Farrell",
@@ -345,13 +345,19 @@ http://localhost:3000/contacts/1
 }
 ```
 
-:speech_balloon: Nota: si ya existe una persona con index usado entonce se actualizaran los datos, de lo contrario se creará, aqui puedes probar con diferentes valores.
+:speech_balloon: Notas importantes:
+
+- Cuando envias una petición ya sea por el navegador o por postman, el código de `server.js` crea una instancia de koa y la inicializa con una configuración en la cual se cargan los routes configurados en `routes/contacts.route.js`, fíjate que allí se ha configurado un `GET` un `POST` y un `PUT`.
+- Si la petición (verbo http + ruta + parametros) coiciden con una definición de algun route, entonces el route ejecuta los middleware (funciones) incluyendo la invocación del método del controlador que le coresponda. Por ejemplo *router.get("/byIndex", "/:index", getContactByIndex);* escucha in GET /contacts/ siempre y cuando le pasen un numero en el url (params) y lo manda al método `getContactByIndex` del controlador `contacts.controller.js`.
+- Luego el controlador ejecuta su lógica de negocios incluso invocando al método findOne del modelo `contacts.model.js` y este a su vez se conecta con Mongo para hacer el query.
+- También puede enviar un PUT similar como lo hiciste en el paso 6 pero en el url debes poner el numero del campo index, por ejemplo `PUT contacts/1` obviamente con su body.
 
 ## Configuración de ESlint y Prettier
+ESLint y prettier son herramientas que nos van a ayudar a tener orden en el código, ya que en javascript es muy fácil caer rapidamente en desorden y que el código se convierta en menos legible, esto incrementaría la deuda técnica. Esta desorden se conoce como `entropía`.
 
 ### EsLint
 
-1. Instalemos `eslint` como dependencia de desarrollo:
+1. Instalemos `eslint` como dependencia de desarrollo, si la aplciacón aún está en ejecución cancelala.
 
 ```bash
 npm i --save-dev eslint
@@ -404,7 +410,6 @@ module.exports = {
 
 ```yaml
 env:
-  browser: true
   node: true
   commonjs: true
   es2021: true
@@ -423,7 +428,7 @@ rules: {}
 
 ```json
 "lint:show": "eslint src/ -f stylish",
-"lint:fix": "eslint --fix --ext .js .",
+"lint:fix": "eslint --fix --ext .js ."
 ```
 
 7. Revisemos si tenemos errores que no satisfagan las reglas de eslint, ejecutemos el comando:
