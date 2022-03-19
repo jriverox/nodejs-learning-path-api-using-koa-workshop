@@ -201,7 +201,7 @@ const personRoute = require('./routes/contacts.route');
 module.exports = [personRoute];
 ```
 
-17. Ahora crearemos el archivo responsable por inicial la aplicación :zap:, creamos el archivo ***server.js*** dentro de *src*
+17. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
 
 ```javascript
 /* eslint-disable no-console */
@@ -224,8 +224,7 @@ const app = new Koa();
 // Inicializar los middleware
 app.use(bodyParser()).use(json()).use(logger());
 
-// eslint-disable-next-line array-callback-return
-routes.map((item) => {
+routes.forEach((item) => {
   app.use(item.routes()).use(item.allowedMethods());
 });
 // abrir la conexión con MongoDB
@@ -242,7 +241,7 @@ mongoose
   });
 ```
 
-18. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente coódigo:
+18. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
 
 ```yaml
 development:
@@ -363,7 +362,7 @@ npx eslint --init
 ```
 
 :speech_balloon: Nota:
-`npx` nos permite ejecutar scripts de paquetes que se encuentra dentro del proyecto (carpeta *node_modules*) la cual es donde se instalan las librerias que instalemos con npm i o npm install.
+`npx` nos permite ejecutar los paquetes npm que se encuentra dentro del proyecto (carpeta `node_modules`) la cual es donde se instalan las librerias que instalemos con npm i o npm install. Por el contrario si en este caso hubieras instalado eslint de manera globlal (por ejemplo: `npm i -G eslint`) entonces podrías usar `npm eslint --init` en lugar de usar `npx eslint --init`.
 
 3. Cuando ejecutamos el comando anterior, se nos presenta una serie de preguntas que debemos elegir, para efectos de este demos, seleccionar los siguiente:
 
@@ -385,7 +384,7 @@ Recuerda haber instalado el plugin de prettier (mencionado en los requisitos) 4.
 npm i --save-dev prettier eslint-config-prettier eslint-plugin-prettier
 ```
 
-5. Creemos el archivo `.prettierrc.js` en la raiz del proyecto y lo editamos con el siguiente codigo:
+4. Creemos el archivo `.prettierrc.js` en la raiz del proyecto y lo editamos con el siguiente codigo:
 
 ```javascript
 module.exports = {
@@ -399,7 +398,7 @@ module.exports = {
 };
 ```
 
-6. Editemos el archivo de configuración de eslint `.eslintrc.yml` para que tenga los plugins y las extensiones de prettier, reemplaza el contenido por:
+5. Editemos el archivo de configuración de eslint `.eslintrc.yml` para que tenga los plugins y las extensiones de prettier, reemplaza el contenido por:
 
 ```yaml
 env:
@@ -418,26 +417,26 @@ plugins:
 rules: {}
 ```
 
-7. Edita el archivo `package.json` y agrega las siguientes lineas a la sección `scripts`, las cuales nos permitiran ejecutar la comprobación si nuestro codigo cumple con los estandares y reglas de eslint:
+6. Edita el archivo `package.json` y agrega las siguientes lineas a la sección `scripts`, las cuales nos permitiran ejecutar la comprobación si nuestro codigo cumple con los estandares y reglas de eslint:
 
 ```json
 "lint:show": "eslint src/ -f stylish",
 "lint:fix": "eslint --fix --ext .js .",
 ```
 
-8. Revisemos si tenemos errores que no satisfagan las reglas de eslint, ejecutemos el comando:
+7. Revisemos si tenemos errores que no satisfagan las reglas de eslint, ejecutemos el comando:
 
 ```bash
 npm run lint:show
 ```
 
-:speech_balloon: Nota: si tenemos errores se mostraran como resultado en la consola, donde se nos indicaran el archivo y la linea. 
+:speech_balloon: Nota: si tenemos errores se mostraran como resultado en la consola, donde se nos indicaran el archivo y la linea.
 
-9. Si tenemos errores, intentemos arreglarlos automaticamente ejecutando el script:
+8. Si tenemos errores, intentemos arreglarlos automaticamente ejecutando el script:
 
 ```bash
 npm run lint:fix
 ```
 
-10. Vuelve a ejecutar el comando: `npm run lint:show` y veras que no tienes errores o bajo la cantidad
-11. Probemos nuestro código de nuevo: ejecuta `npm start` y accede por postman o el browser a http://localhost:3000/contacts/29
+9. Vuelve a ejecutar el comando: `npm run lint:show` y veras que no tienes errores o bajo la cantidad
+10. Probemos nuestro código de nuevo: ejecuta `npm start` y accede por postman o el browser a <http://localhost:3000/contacts/>

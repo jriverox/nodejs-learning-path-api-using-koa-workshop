@@ -2,7 +2,7 @@ const sonarqubeScanner =  require('sonarqube-scanner');
 sonarqubeScanner( 
     { 
         serverUrl:  'http://localhost:9000', 
-        token : '0e685d542f66672cee891b7382ab94719574be0c',
+        token : '1767150d397352e93e4fffb9d6fe22073f2f9576',
         options : { 
             'sonar.projectName': 'koa-workshop',
             'sonar.sources':  'src', 

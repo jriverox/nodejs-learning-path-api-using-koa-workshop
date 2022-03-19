@@ -34,7 +34,6 @@ module.exports.updateContact = async (ctx) => {
   if (!found) {
     throw NotFoundError(`No se ha encontrado la persona con el indice ${index}`)
   } else {
-    console.log('yyyy', found)
     await contactModel.updateOne(filter, contact, options);
     ctx.body = contact;
     ctx.response.status = 200;

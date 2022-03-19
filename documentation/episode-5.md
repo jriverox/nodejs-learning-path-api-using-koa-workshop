@@ -759,15 +759,74 @@ npm run test:coverage
 
 ### Integration Tests
 
+Hasta aquí hemos implementado algunas pruebas unitarias. Ahora vamos a implementar unas pruebas con un enfoque mas similar a lo que podría ser un E2E (end to end).
+
 1. Instalamos supertest
 
 ```bash
 npm i --save-dev supertest
 ```
 
-2. Creamos la carpeta `integration` dentro de la carpeta `tests`.
+2. Creamos el archivo `app.js` dentro de la carpeta `src`. Con este cambio lo que vamos hacer es refactorizar el codigo de configuración e inicialización de la variable app que tenemos en el archivo `server.js`, con el fin de poder acceder a esa instancia sin necesidad de ejecutar su metod listen. Entonces el código debe quedar asi:
 
-3. Creamos el archivo `contacts.spec.js` dentro de `tests/integration`.
+```javascript
+const Koa = require('koa');
+const json = require('koa-json');
+const logger = require('koa-logger');
+const bodyParser = require('koa-bodyparser');
+const errorHandler = require('./middleware/error-handler');
+const LogManager = require('./utils/logging/log-manager');
+
+const logManager = new LogManager();
+const routes = require('./routes');
+
+// Inicializar nuestro servidor usando koa (similar a express)
+const app = new Koa();
+// Inicializar los middleware
+app.use(bodyParser()).use(json()).use(logger()).use(errorHandler);
+
+routes.forEach((item) => {
+  app.use(item.routes()).use(item.allowedMethods());
+});
+
+module.exports = app;
+```
+
+3. Ahora nos falta modificar `server.js` el cual debería quedar así:
+
+```javascript
+
+const yenv = require('yenv');
+const mongoose = require('mongoose');
+const app = require('./app');
+
+const env = yenv();
+
+app.on('error', (err, ctx) => {
+  const isOperationalError = logManager.error(err);
+  if (!isOperationalError) {
+    process.exit(1);
+  }
+});
+
+// abrir la conexión con MongoDB
+mongoose
+  .connect(env.MONGODB_URL, { useNewUrlParser: true })
+  .then(() => {
+    // iniciar el servidor koa para que empiece a escuchar peticiones
+    app.listen(env.PORT, () => {
+      console.log(`Escuchando en el puerto ${env.PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+```
+
+4. Creamos la carpeta `integration` dentro de la carpeta `tests`.
+
+5. Creamos el archivo `contacts.spec.js` dentro de `tests/integration`.
 
 ```javascript
 const request = require('supertest');
@@ -1010,7 +1069,7 @@ describe('Contacts API', () => {
 });
 ```
 
-4. Ahora creamos otra prueba creando el archivo `auth.spec.js` igualmente dentro de `tests/integration`.
+6. Ahora creamos otra prueba creando el archivo `auth.spec.js` igualmente dentro de `tests/integration`.
 
 ```javascript
 const request = require('supertest');
@@ -1113,13 +1172,13 @@ describe('Auth API', () => {
 });
 ```
 
-5. Editamos el archivo `package.json` para agregar el siguiente script:
+7. Editamos el archivo `package.json` para agregar el siguiente script:
 
 ```json
  "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage"
 ```
 
-6. Ahora ejecutamos las pruebas, tenemos la opción de ejecutar solo las de integracion o toda la suite de pruebas:
+8. Ahora ejecutamos las pruebas, tenemos la opción de ejecutar solo las de integracion o toda la suite de pruebas:
 
 ```bash
 npm run test:integration
