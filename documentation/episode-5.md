@@ -1,16 +1,5 @@
 # Episodio 5: Unit Tests + Integration Tests
 
-## Tabla de Contenido
-
-  - [Introducción](#introducción)
-  - [Referencias que te recomiendo leer](#referencias-que-te-recomiendo-leer)
-  - [Paquetes NPM que vamos a utilizar](#paquetes-npm-que-vamos-a-utilizar)
-  - [Pasos para implementar](#pasos-para-implementar)
-    - [Unit Tests](#unit-tests)
-    - [Integration Tests](#integration-tests)
-
-## Introducción
-
 En este episodio vamos a implementar dos tipos de pruebas las cuales son muy importantes para asegurar la calidad de un proyecto. El tema de unit testing e integration testing es muy importante de hecho hoy en día muchos proyectos lo tienen como parte del desarrollo y restringen integrar código si las pruebas no tienen la cobertura deseada.
 
 En este ejemplo hemos dejado las pruebas como uno de los últimos pasos, sin embargo, hay prácticas como [TDD](https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas) en las cuales la fase de testing es tan crucial que es una de las primeras etapas antes de implementar cualquier funcionalidad. De hecho el término `Test Driven Development` (TDD) en español debería traducirse como `Desarrollo orientado a Ejemplos`, porque cuando implementas los unit tests antes de implementar el código lo que haces es ir creando una idea de como será tu código.

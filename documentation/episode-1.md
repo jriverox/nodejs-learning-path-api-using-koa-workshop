@@ -12,7 +12,7 @@ Recuerda haber leìdo los requistos que necesitas instalar antes en la página [
 npm init -y
 ```
 
-4. Instalamos las principales dependencias que usaremos: `koa` y algunas de su ecosistema, `mongoose` para conectarnos a MongoDB, `yenv` para manejar la configuarción en un yaml y `cross-env` para facilitar el manejo de la variable de entorno *NODE_ENV*), ejecuta el siguiente comando:
+4. Instalamos las principales dependencias que usaremos: `koa` y algunas de su ecosistema, `mongoose` para conectarnos a MongoDB, `yenv` para manejar la configuarción en un yaml y `cross-env` para facilitar el manejo de la variable de entorno _NODE_ENV_), ejecuta el siguiente comando:
 
 ```bash
 npm i koa koa-router koa-bodyparser koa-logger koa-json mongoose yenv cross-env
@@ -25,23 +25,23 @@ npm i --save-dev nodemon
 ```
 
 6. _OPTIONAL_ Agreguemos el archivo `.editorconfig`. Abre de nuevo la Paleta de Comandos (`control + shift + p`) y escribe `editor` y selecciona la opción `Generate .editorconfig`. Este archivo nos permite especificar por ejemplo cuantos espacios tendran nuestros tabs para identar nuestro código.
-2. _OPTIONAL_ Editemos el archivo `.editorconfig` y cambia el valor de `indent_size` a `2`
-3.  Ok, ahora creemos las carpetas que usaremos para estructurar nuestro proyecto:
-4.  Crea la carpeta `src` en la raiz del proyecto
-5.  Dentro de la carpeta `src` creamos las siguientes carpetas vacias para ir estructurando nuestro proyecto:
+7. _OPTIONAL_ Editemos el archivo `.editorconfig` y cambia el valor de `indent_size` a `2`
+8. Ok, ahora creemos las carpetas que usaremos para estructurar nuestro proyecto:
+9. Crea la carpeta `src` en la raiz del proyecto
+10. Dentro de la carpeta `src` creamos las siguientes carpetas vacias para ir estructurando nuestro proyecto:
 
 - `models`
 - `controllers`
 - `routes`
 
-13. Dentro de la carpeta `models` creamos `contact.model.js` con el siguiente código:
+11. Dentro de la carpeta `models` creamos `contact.model.js` con el siguiente código:
 
 ```javascript
 /**
  * contact.model.js
  * Nos permite gestionar los datos de la colección contacts de MongoDB
  */
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
@@ -104,18 +104,18 @@ const contactSchema = new Schema(
     },
   },
   {
-    collection: 'contacts',
-  },
+    collection: "contacts",
+  }
 );
 
-const contactModel = model('ContactModel', contactSchema);
+const contactModel = model("ContactModel", contactSchema);
 module.exports = contactModel;
 ```
 
 14. Dentro de la carpeta `controllers` creamos `contacts.controller.js` con el siguiente código:
 
 ```javascript
-const contactModel = require('../models/contact.model');
+const contactModel = require("../models/contact.model");
 
 /**
  *
@@ -157,7 +157,9 @@ module.exports.updateContact = async (ctx) => {
 };
 
 module.exports.createContact = async (ctx) => {
-  const { index } = await contactModel.findOne({}, 'index', { sort: { index: -1 } });
+  const { index } = await contactModel.findOne({}, "index", {
+    sort: { index: -1 },
+  });
   const contact = { ...ctx.request.body, index: index + 1 };
   await contactModel.create(contact);
   ctx.body = contact;
@@ -165,43 +167,43 @@ module.exports.createContact = async (ctx) => {
 };
 ```
 
-15. Dentro de la carpeta `routes` creamos `contacts.route.js` con el siguiente código:
+12. Dentro de la carpeta `routes` creamos `contacts.route.js` con el siguiente código:
 
 ```javascript
-const KoaRouter = require('koa-router');
+const KoaRouter = require("koa-router");
 
-const router = new KoaRouter({ prefix: '/contacts' });
+const router = new KoaRouter({ prefix: "/contacts" });
 const {
   getContactByIndex,
   updateContact,
   createContact,
-} = require('../controllers/contacts.controller');
+} = require("../controllers/contacts.controller");
 
 // GET /contacts/29
-router.get('/byIndex', '/:index', getContactByIndex);
+router.get("/byIndex", "/:index", getContactByIndex);
 
 // POST /contacts/
-router.post('/post', '/', createContact);
+router.post("/post", "/", createContact);
 
 // PUT /contacts/29
-router.put('/put', '/:index', updateContact);
+router.put("/put", "/:index", updateContact);
 
 module.exports = router;
 ```
 
-16. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo `routes.js` dentro de `src` con el siguiente codigo:
+13. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo `routes.js` dentro de `src` con el siguiente codigo:
 
 ```javascript
 /**
  * Expone una coleccion de todos los routes de nuestra api,
  * a pesar de que aqui solo se se expone personRoute en la vida real debería exponer todos .
  */
-const personRoute = require('./routes/contacts.route');
+const personRoute = require("./routes/contacts.route");
 // aqui podria exponer todos los routes, ejemplo module.exports = [personRoute, route2]
 module.exports = [personRoute];
 ```
 
-17. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
+14. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
 
 ```javascript
 /* eslint-disable no-console */
@@ -209,15 +211,15 @@ module.exports = [personRoute];
  * server.js
  * Responsable por inciar nuestra api, inicializa koa con todos sus middleware y tambien inicialzia la conexión de bd
  */
-const Koa = require('koa');
-const json = require('koa-json');
-const logger = require('koa-logger');
-const bodyParser = require('koa-bodyparser');
-const yenv = require('yenv');
-const mongoose = require('mongoose');
+const Koa = require("koa");
+const json = require("koa-json");
+const logger = require("koa-logger");
+const bodyParser = require("koa-bodyparser");
+const yenv = require("yenv");
+const mongoose = require("mongoose");
 
 const env = yenv();
-const routes = require('./routes');
+const routes = require("./routes");
 
 // Inicializar nuestro servidor usando koa (similar a express)
 const app = new Koa();
@@ -241,22 +243,22 @@ mongoose
   });
 ```
 
-18. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
+15. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
 
 ```yaml
 development:
   PORT: 3000
-  MONGODB_URL: 'mongodb://localhost:27017/contacts_demo'
+  MONGODB_URL: "mongodb://localhost:27017/contacts_demo"
 production:
   PORT: 3000
-  MONGODB_URL: 'mmongodb+srv://tu-usuario:tu-contraseña@cluster0-8hxu4.mongodb.net/contacts?retryWrites=true&w=majority'
+  MONGODB_URL: "mmongodb+srv://tu-usuario:tu-contraseña@cluster0-8hxu4.mongodb.net/contacts?retryWrites=true&w=majority"
 ```
 
 :speech_balloon: Notas: el archivo `env.yaml` contiene las variables de entorno que usará nuestro codigo, en este caso PORT y MONGODB_URL. Este env.yaml tiene 2 ambientes (development y production), para que nuestra aplicación corra, Nodejs y la libreria `yenv` necesitan un valor en la variable de entorno `NODE_ENV`, esta variable define el ambiente que usaremos (en este caso development). En los siguientes pasos agregaremos en la sección scripts del archivo package.json varios scrips, por ejemplo `start` alli contendrá un valor como: `cross-env NODE_ENV=development nodemon ./src/server.js` lo que significa que cross-env ya establece esta variable NODE_ENV a `development`.
 
 Otro punto importante acerca de la variable `MONGODB_URL` la cual contiene la cadena de conexión de la BD de MongoDB, el valor que deberás establecer dependerá de donde estes ejecutando la BD y si tiene credenciales o no. En el caso mostrado mas arriba (mongodb://localhost:27017/contacts_demo) no tiene ni password ni usuario, esto es una práctica insegura pero obviamente para fines de prueba está bien.
 
-19. Ahora agregaremos el nombre del archivo `env.yaml` al archivo `.gitignore`, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva `env.yaml`
+16. Ahora agregaremos el nombre del archivo `env.yaml` al archivo `.gitignore`, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva `env.yaml`
 
 ## Probemos nuestra API
 
@@ -388,13 +390,13 @@ npm i --save-dev prettier eslint-config-prettier eslint-plugin-prettier
 
 ```javascript
 module.exports = {
-  endOfLine: 'lf',
+  endOfLine: "lf",
   semi: true,
-  trailingComma: 'all',
+  trailingComma: "all",
   singleQuote: true,
   printWidth: 100,
   tabWidth: 2,
-  endOfLine: 'auto',
+  endOfLine: "auto",
 };
 ```
 
