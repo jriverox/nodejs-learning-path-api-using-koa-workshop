@@ -76,6 +76,7 @@ Como se mencionó anterioremente la idea es implementar una API Rest para cubrir
 - [Episodio 3: Validando los Requests](./documentation/episode-3.md)
 - [Episodio 4: Manejo de Errores](./documentation/episode-4.md)
 - [Episodio 5: Unit Tests + Integration Tests](./documentation/episode-5.md)
+- [Episodio 6: Evaluando el Código usando SonaQube](./documentation/episode-6.md)
 
 ## Stack
 
