@@ -1,12 +1,14 @@
 # Episodio 2: Protegiendo el acceso del API
 
-En este episodio nos enfocaremos en proteger el acceso a los endpoints del API usando Jason Web Token también conocido como [JWT](https://jwt.io/introduction). Para ello usaremos las librerías [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt).
+En este episodio nos enfocaremos en proteger el acceso a los endpoints del API usando Json Web Token también conocido como [JWT](https://jwt.io/introduction). Para ello usaremos las librerías [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt).
 
 ## Pasos para implementar
 
 ### Creacioón del Usuario (SignUp)
 
-1. Instalamos las librerías que vamos a necesitar. [bcrypt](https://www.npmjs.com/package/bcrypt). Para crear un hash del password del usuario y no almacenarlo en texto plano. Y [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt) nos ayudara a generar un token cuando el usuario se autentique.
+1. Instalamos las librerías que vamos a necesitar. 
+   - [bcrypt](https://www.npmjs.com/package/bcrypt). Para crear un hash del password del usuario y no almacenarlo en texto plano en la base de datos.
+   - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken). Para generar un token cuando el usuario se autentique.
 
 ```bash
 npm i bcrypt jsonwebtoken
@@ -43,10 +45,7 @@ module.exports = userModel;
 
 ```javascript
 const bcrypt = require('bcrypt');
-const yenv = require('yenv');
 const userModel = require('../models/user.model');
-
-const env = yenv();
 
 module.exports.signUp = async (ctx) => {
   const { username, password } = ctx.request.body;
@@ -125,15 +124,16 @@ production:
   TOKEN_EXPIRATION_HOURS: 24
 ```
 
-2. Editemos el archivo `auth.controller.js` ubicado dentro de `controllers` e importemos el module npm jsonwebtoken y también agregaremos la función signIn para autenticar y generar el token. Coloco todo el código aquí para que estés seguro de como debe quedar, pero presta atención al lo que sea ha agregado. He colocado el comentario: `codigo agregado en este paso`
+2. Editemos el archivo `auth.controller.js` ubicado dentro de `controllers` e importemos el module npm jsonwebtoken y también agregaremos la función signIn para autenticar y generar el token. Coloco todo el código aquí para que estés seguro de como debe quedar, pero presta atención a lo que sea ha agregado. He colocado el comentario: `codigo agregado en este paso`
 
 ```javascript
 const bcrypt = require('bcrypt');
 // codigo agregado en este paso
 const jwt = require('jsonwebtoken');
+// codigo agregado en este paso
 const yenv = require('yenv');
 const userModel = require('../models/user.model');
-
+// codigo agregado en este paso
 const env = yenv();
 
 module.exports.signUp = async (ctx) => {
@@ -224,21 +224,25 @@ module.exports.verifyToken = (ctx, next) => {
 6. Te preguntarás donde usaremos el middleware creado en el paso anterior. Edita el archivo `routes/contacts.route.js` e importa la referencia de `middleware/auth.js` y agrégalo a cada endpoint antes de invocar cada método del controller.
 
 ```javascript
-const KoaRouter = require('koa-router');
+const KoaRouter = require("koa-router");
 
-const router = new KoaRouter({ prefix: '/contacts' });
-const { getByIndex, save } = require('../controllers/contacts.controller');
-// codigo agregado en estepaso. Importamos la funcion que hará de middleware
+const router = new KoaRouter({ prefix: "/contacts" });
+const {
+  getContactByIndex,
+  updateContact,
+  createContact,
+} = require("../controllers/contacts.controller");
+// codigo agregado en este paso. Importamos la funcion que hará de middleware
 const { verifyToken } = require('../middleware/auth');
-
-// colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
+// codigo agregado en este paso: colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
 // GET /contacts/29
-router.get('/byIndex', '/:index', verifyToken, getByIndex);
-
-// colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
-// POST
-router.post('/post', '/', verifyToken, save);
-
+router.get("/byIndex", "/:index", verifyToken, getContactByIndex);
+// codigo agregado en este paso: colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
+// POST /contacts/
+router.post("/post", "/", verifyToken, createContact);
+igo agregado en este paso: colocamos lafuncion verifyToken para que se ejecute en cadarequest antes de invocar a la funcion del controllador
+// PUT /contacts/29
+router.put("/put", "/:index", verifyToken, updateContact);
 module.exports = router;
 ```
 
