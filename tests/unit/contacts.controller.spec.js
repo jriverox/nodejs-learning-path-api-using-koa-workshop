@@ -1,205 +1,117 @@
 const { createMockContext } = require('@shopify/jest-koa-mocks');
 const { getContactByIndex, createContact, updateContact } = require('../../src/controllers/contacts.controller');
 const contactModel = require('../../src/models/contact.model');
-const AppError = require('../../src/utils/logging/app-error');
-const commonErrors = require('../../src/utils/logging/common-errors');
+const contactMockData = require('../mock-data/contact.json');
 
-let ctx = {};
-
-jest.mock('../../src/models/contact.model');
-
-describe('API / Contacts', () => {
+describe('Contacts Controller', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('GET /contact/:index', () => {
-    it('When pass an index of existing contact, should return the data successfully', async () => {
+  describe('Get Contact by Index', () => {
+    it('When pass an index of existing contact, should return statusCode 200', async () => {
+      //Arrange
       const contact = {
         index: 1000,
-        dateOfBirth: "1908-01-01",
-        firstName: "Pepe",
-        lastName: "Trueno",
-        username: "pepetrueno",
-        company: "Acme",
-        email: "pepetrueno@acme.com",
-        phone: "+1 234 456 567",
-        address: {
-          street: "calle ugreen 234",
-          city: "Miami",
-          state: "Florida"
-        },
-        jobPosition: "CEO",
-        roles: ["guest", "admin"],
-        active: true
+        ...contactMockData,
       };
-
-      contactModel.findOne.mockResolvedValue(contact);
-      const filter = { index:1000 };
-
-      ctx = createMockContext({
+      contactModel.findOne = jest.fn().mockResolvedValue(contact);
+      const ctx = createMockContext({
         method: 'GET',
-        customProperties: { params: filter },
-        state: contact,
+        customProperties: { params: { index: 1000 } },
       });
 
+      //Act
       await getContactByIndex(ctx);
 
+      //Assert
       expect(ctx.status).toBe(200);
-      expect(ctx.body).toEqual(contact);
-      expect(contactModel.findOne).toBeCalledWith(filter);
-
+      expect(ctx.body).toBe(contact);
     });
 
-    it('When pass an index of a contact that does not exist, should return 404 not found error', async () => {
-      contactModel.findOne.mockResolvedValue(null);
-      const filter = { index: 1001 };
-
-      ctx = createMockContext({
+    it('When pass an index of contact that does not exist, should return statusCode 404', async () => {
+      //Arrange
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      const ctx = createMockContext({
         method: 'GET',
-        statusCode: 404,
-        customProperties: { params: filter },
-        state: null,
+        customProperties: { params: { index: 1000 } },
       });
 
-      await expect(getContactByIndex(ctx)).rejects.toThrowError(/No se ha encontrado/);
-      expect(ctx.status).toBe(commonErrors.NotFound.httpStatus);
-      expect(contactModel.findOne).toBeCalledWith(filter);
-
       try {
+        //Act
         await getContactByIndex(ctx);
       } catch (error) {
-        expect(error).toBeInstanceOf(AppError);
+        //Assert
+        expect(error.message).toMatch(/No se ha encontrado/);
+        expect(error.status).toBe(404);
         expect(error.isOperational).toBeTruthy();
-        expect(error.status).toBe(commonErrors.NotFound.httpStatus);
       }
     });
   });
 
-  describe('PUT /contacts/:index', () => {
-    it('When pass correct data of a contact that exists, should update successfully', async () => {
+  describe('Create Contact', () => {
+    it('When try to create a contact with correct data, should return statusCode 201', async () => {
+      //Arrange
       const contact = {
-        dateOfBirth: "1908-01-01",
-        firstName: "Pepe",
-        lastName: "Trueno",
-        username: "pepetrueno",
-        company: "Acme",
-        email: "pepetrueno@acme.com",
-        phone: "+1 234 456 567",
-        address: {
-          street: "calle ugreen 234",
-          city: "Miami",
-          state: "Florida"
-        },
-        jobPosition: "CEO",
-        roles: ["guest", "admin"],
-        active: true
+        index: 1000,
+        ...contactMockData,
       };
-
-      const filter = { index: 1000 };
-      contactModel.findOne.mockResolvedValue(filter);
-      contactModel.updateOne.mockResolvedValue(filter);
-
-      ctx = createMockContext({
-        method: 'PUT',
-        customProperties: { params: filter, body: contact },
-        state: contact,
-      });
-
-      await updateContact(ctx);
-
-      expect(ctx.status).toBe(200);
-      expect(contactModel.updateOne).toBeCalled();
-      expect(contactModel.findOne).toBeCalled();
-
-    });
-
-    it('When pass correct data of a contact that doesn not exist, should return 404', async () => {
-
-      contactModel.findOne.mockResolvedValue(null);
-      const filter = { index: 1001 };
-
-      ctx = createMockContext({
-        method: 'GET',
-        statusCode: 404,
-        customProperties: { params: filter },
-        state: null,
-      });
-
-      await expect(updateContact(ctx)).rejects.toThrowError(/No se ha encontrado/);
-      expect(contactModel.findOne).toBeCalled();
-      expect(ctx.status).toBe(commonErrors.NotFound.httpStatus);
-
-      try {
-        await updateContact(ctx);
-      } catch (error) {
-        expect(error).toBeInstanceOf(AppError);
-        expect(error.isOperational).toBeTruthy();
-        expect(error.status).toBe(commonErrors.NotFound.httpStatus);
-      }
-    });
-  });
-
-  describe('POST /contacts', () => {
-    it('When pass correct data of a contact that doesnt exist, should create successfully', async () => {
-      const contact = {
-        dateOfBirth: "1908-01-01",
-        firstName: "Pepe",
-        lastName: "Trueno",
-        username: "pepetrueno",
-        company: "Acme",
-        email: "pepetrueno@acme.com",
-        phone: "+1 234 456 567",
-        address: {
-          street: "calle ugreen 234",
-          city: "Miami",
-          state: "Florida"
-        },
-        jobPosition: "CEO",
-        roles: ["guest", "admin"],
-        active: true
-      };
-
-      contactModel.findOne.mockResolvedValue({index: 1000});
-      contactModel.create.mockResolvedValue(contact);
-
-      ctx = createMockContext({
+      contactModel.findOne = jest.fn().mockResolvedValue(contact);
+      contactModel.create = jest.fn().mockResolvedValue({});
+      const ctx = createMockContext({
         method: 'POST',
-        customProperties: { body: contact },
-        state: {...contact, index: 1000},
+        requestBody: contactMockData
       });
 
+      //Act
       await createContact(ctx);
 
+      //Assert
       expect(ctx.status).toBe(201);
-      expect(contactModel.create).toBeCalled();
-      expect(contactModel.findOne).toBeCalled();
+      expect(ctx.body.index).toBeGreaterThan(contact.index);
 
     });
+  });
 
-    // it('When pass correct data of a contact that doesn not exist, should return 404', async () => {
+  describe('Update Contact', () => {
+    it('When try update a contact with correct data, should return statusCode 200', async () => {
+      //Arrange
+      const contact = {
+        index: 1000,
+        ...contactMockData,
+      };
+      contactModel.findOne = jest.fn().mockResolvedValue(contact);
+      contactModel.updateOne = jest.fn().mockResolvedValue({});
+      const ctx = createMockContext({
+        method: 'PUT',
+        customProperties: { params: { index: 1000 } },
+        requestBody: contactMockData
+      });
 
-    //   contactModel.findOne.mockResolvedValue(null);
-    //   const filter = { index: 1001 };
+      //Act
+      await updateContact(ctx);
 
-    //   ctx = createMockContext({
-    //     method: 'GET',
-    //     statusCode: 404,
-    //     customProperties: { params: filter },
-    //     state: null,
-    //   });
+      //Assert
+      expect(ctx.status).toBe(200);
+    });
 
-    //   await expect(updateContact(ctx)).rejects.toThrowError(/No se ha encontrado/);
-    //   expect(contactModel.findOne).toBeCalled();
-    //   expect(ctx.status).toBe(commonErrors.NotFound.httpStatus);
-
-    //   try {
-    //     await updateContact(ctx);
-    //   } catch (error) {
-    //     expect(error).toBeInstanceOf(AppError);
-    //     expect(error.isOperational).toBeTruthy();
-    //     expect(error.status).toBe(commonErrors.NotFound.httpStatus);
-    //   }
-    // });
+    it('When try update a contact with correct data but does not exist, should return statusCode 404', async () => {
+       //Arrange
+      contactModel.findOne = jest.fn().mockResolvedValue(null);
+      const ctx = createMockContext({
+        method: 'PUT',
+        customProperties: { params: { index: 1000 } },
+        requestBody: contactMockData
+      });
+      try {
+        //Act
+        await updateContact(ctx);
+      } catch (error) {
+        //Assert
+        expect(error.message).toMatch(/No se ha encontrado/);
+        expect(error.status).toBe(404);
+        expect(error.isOperational).toBeTruthy();
+      }
+    });
   });
 });
