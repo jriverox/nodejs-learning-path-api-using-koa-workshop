@@ -1,18 +1,18 @@
 # Episodio 2: Protegiendo el acceso del API
 
-En este epiodio nos enfocaremos en proteger el acceso a los endpoints del API usando Jason Web Token tambien conocido como [JWT](https://jwt.io/introduction). Para ello usaremos las librerias [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt).
+En este episodio nos enfocaremos en proteger el acceso a los endpoints del API usando Jason Web Token también conocido como [JWT](https://jwt.io/introduction). Para ello usaremos las librerías [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt).
 
 ## Pasos para implementar
 
 ### Creacioón del Usuario (SignUp)
 
-1. Instalamos las liberías que vamos a necesitar. [bcrypt](https://www.npmjs.com/package/bcrypt). Para crear un hash del password del usuario y no almacenarlo en texto plano. Y [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt) nos ayudara a generar un token cuando el usuario se autentique.
+1. Instalamos las librerías que vamos a necesitar. [bcrypt](https://www.npmjs.com/package/bcrypt). Para crear un hash del password del usuario y no almacenarlo en texto plano. Y [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt) nos ayudara a generar un token cuando el usuario se autentique.
 
 ```bash
 npm i bcrypt jsonwebtoken
 ```
 
-2. Crea el archivo `user.model.js`dentro de la carpeta `models`. Este modelo nos permitira persistir las credenciales de los usuarios (username y password).
+2. Crea el archivo `user.model.js`dentro de la carpeta `models`. Este modelo nos permitirá persistir las credenciales de los usuarios (username y password).
 
 ```javascript
 const mongoose = require('mongoose');
@@ -67,7 +67,7 @@ module.exports.signUp = async (ctx) => {
 };
 ```
 
-4. Creamos el archivo `auth.route.js`dentrod e la carpeta `routes`. Donde expondremos el endpoint *auth/signUp*.
+4. Creamos el archivo `auth.route.js`dentro de la carpeta `routes`. Donde expondremos el endpoint *auth/signUp*.
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -80,7 +80,7 @@ router.post('auth/signup', '/signup', signUp);
 module.exports = router;
 ```
 
-5. Edita el archivo `routes.js` y asegurate de agregar el auth.route creado previamente, el archivo debe quedar asi:
+5. Edita el archivo `routes.js` y asegúrate de agregar el auth.route creado previamente, el archivo debe quedar así:
 
 ```javascript
 const personRoute = require('./routes/contacts.route');
@@ -95,7 +95,7 @@ module.exports = [personRoute, authRoute];
 npm start
 ```
 
-7. Abre postman y en una nueva pestaña selecciona como verbo `POST` y el url `localhost:3000/auth/signup` haz clic en `Body` y elige la opción `x-wwww-form-urlencoded` ahora agrega dos keys `username` y `password`. Estos datos recuerdalos para que los puedas usar mas adelante para autenticarte. Te dejo un ejemplo de codigo en curl para que tengas una idea:
+7. Abre Postman y en una nueva pestaña selecciona como verbo `POST` y el url `localhost:3000/auth/signup` haz clic en `Body` y elige la opción `x-wwww-form-urlencoded` ahora agrega dos keys `username` y `password`. Estos datos recuérdalos para que los puedas usar mas adelante para autenticarte. Te dejo un ejemplo de código en curl para que tengas una idea:
 
 ```bash
 curl --location --request POST 'localhost:3000/auth/signup' \
@@ -104,13 +104,13 @@ curl --location --request POST 'localhost:3000/auth/signup' \
 --data-urlencode 'password=misecreto'
 ```
 
-8. Si todo salió bien el usuario se debe haber creado. De hecho la coleccion users se crea automaticamente, consulta los datos en Mongo, veras que el password se ha generado como un *hash*, tal como lo implementamos en `controllers/users.controller.js` funcion *signUp*.
+8. Si todo salió bien el usuario se debe haber creado. De hecho, la colección users se crea automáticamente, consulta los datos en Mongo, veras que el password se ha generado como un *hash*, tal como lo implementamos en `controllers/users.controller.js` función *signUp*.
 
 ### Autenticación y Manejo del Token
 
-Hasta aqui hemos creado todo el codigo para crear un usuario. Ahora vamos a implementar el metodo de autenticación y la generación del Token.
+Hasta aquí hemos creado todo el código para crear un usuario. Ahora vamos a implementar el método de autenticación y la generación del Token.
 
-1. Editamos elarchivo `env.yaml` y agreguemos laa variables: `TOKEN_KEY` este valor lo usaremos para generar y validar el toeken y `TOKEN_EXPIRATION_HOURS` que usaremos para tener la cantidad de horas de duracion del token.
+1. Editamos el archivo `env.yaml` y agreguemos las variables: `TOKEN_KEY` este valor lo usaremos para generar y validar el token y `TOKEN_EXPIRATION_HOURS` que usaremos para tener la cantidad de horas de duración del token.
 
 ```yaml
 development:
@@ -125,7 +125,7 @@ production:
   TOKEN_EXPIRATION_HOURS: 24
 ```
 
-2. Editemos el archivo `auth.controller.js` ubicado dentro de `controllers` e importemos el module npm jsonwebtoken y tambien agregaremos la funcion signIn para autenticar y generar el token. Coloco todo el código aqui para que estes seguro de como debe quedar, pero presta atención al lo que sea ha agregado. He colocado el comentario: `codigo agregado en este paso`
+2. Editemos el archivo `auth.controller.js` ubicado dentro de `controllers` e importemos el module npm jsonwebtoken y también agregaremos la función signIn para autenticar y generar el token. Coloco todo el código aquí para que estés seguro de como debe quedar, pero presta atención al lo que sea ha agregado. He colocado el comentario: `codigo agregado en este paso`
 
 ```javascript
 const bcrypt = require('bcrypt');
@@ -177,7 +177,7 @@ module.exports.signIn = async (ctx) => {
 };
 ```
 
-3. Editamos el archivo `auth.route.js` dentro del folder `routes` y agregaremos la funcion `signIn` en el require del auth.controller, tambien agregaremos el post invocará el signIn.
+3. Editamos el archivo `auth.route.js` dentro del folder `routes` y agregaremos la función `signIn` en el require del auth.controller, también agregaremos el post invocará el signIn.
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -193,7 +193,7 @@ router.post('auth/signin', '/signin', signIn);
 module.exports = router;
 ```
 
-4. Ahora necesitamos crear un `middleware` que nos permitirá implementar una validación del token para determinar si el usuario se ha autenticado antes de invocar a los endpoints del controller contacts. Para ello crea lacarpeta `middleware` dentro de `src`.
+4. Ahora necesitamos crear un `middleware` que nos permitirá implementar una validación del token para determinar si el usuario se ha autenticado antes de invocar a los endpoints del controller contacts. Para ello crea la carpeta `middleware` dentro de `src`.
 
 5. Y ahora creamos el archivo `auth.js` dentro de esa carpeta:
 
@@ -221,7 +221,7 @@ module.exports.verifyToken = (ctx, next) => {
 };
 ```
 
-6. Te preguntarás donde usaremos el middleware creado en el paso anterior. Edita el archivo `routes/contacts.route.js` e importa la referencia de `middleware/auth.js` y agregalo a cada endpoint antes de invocar cada metodo del controller.
+6. Te preguntarás donde usaremos el middleware creado en el paso anterior. Edita el archivo `routes/contacts.route.js` e importa la referencia de `middleware/auth.js` y agrégalo a cada endpoint antes de invocar cada método del controller.
 
 ```javascript
 const KoaRouter = require('koa-router');
@@ -242,7 +242,7 @@ router.post('/post', '/', verifyToken, save);
 module.exports = router;
 ```
 
-7. Hemos terminado la implementación y es hora de probar. Envia un `POST` a `localhost:3000/auth/signin` y utiliza el mismo body que usaste cuando creaste al usuario. Nuevamente te muestro desde codigo curl para que tengas una idea mas clara. Recuerda usar las credenciales de algun usuario que hayas creado. El password debe ser plano NO el hash.
+7. Hemos terminado la implementación y es hora de probar. Envía un `POST` a `localhost:3000/auth/signin` y utiliza el mismo body que usaste cuando creaste al usuario. Nuevamente te muestro desde código curl para que tengas una idea mas clara. Recuerda usar las credenciales de algún usuario que hayas creado. La contraseña que debes poner es el texto plano, NO el hash guardado en la BD.
 
 ```bash
 curl --location --request POST 'localhost:3000/auth/signin' \

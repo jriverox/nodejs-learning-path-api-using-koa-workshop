@@ -1,18 +1,18 @@
 # Episodio 1: Creando un API rest con Node.js, Koa.js y MongoDB
 
-Recuerda haber leìdo los requistos que necesitas instalar antes en la página [principal](../README.md#requisitos).
+Recuerda haber leído los requisitos que necesitas instalar antes en la página [principal](../README.md#requisitos).
 
 ## Pasos para implementar
 
 1. Creemos la carpeta raíz de nuestro proyecto, sugiero algo como `api-node-koa-workshop`
 2. Abramos la carpeta con Visual Studio Code
-3. Abre el terminal (puede ser de VS Code o el de tu preferencia pero debes dentro de la carpeta) e inicializa el nuevo proyecto npm, con el comando:
+3. Abre el terminal (puede ser de VS Code o el de tu preferencia, pero debes dentro de la carpeta) e inicializa el nuevo proyecto npm, con el comando:
 
 ```bash
 npm init -y
 ```
 
-4. Instalamos las principales dependencias que usaremos: `koa` y algunas de su ecosistema, `mongoose` para conectarnos a MongoDB, `yenv` para manejar la configuarción en un yaml y `cross-env` para facilitar el manejo de la variable de entorno _NODE_ENV_), ejecuta el siguiente comando:
+4. Instalamos las principales dependencias que usaremos: `koa` y algunas de su ecosistema, `mongoose` para conectarnos a MongoDB, `yenv` para manejar la configuración en un yaml y `cross-env` para facilitar el manejo de la variable de entorno _NODE_ENV_), ejecuta el siguiente comando:
 
 ```bash
 npm i koa koa-router koa-bodyparser koa-logger koa-json mongoose yenv cross-env
@@ -24,11 +24,11 @@ npm i koa koa-router koa-bodyparser koa-logger koa-json mongoose yenv cross-env
 npm i --save-dev nodemon
 ```
 
-6. _OPTIONAL_ Agreguemos el archivo `.editorconfig`. Abre de nuevo la Paleta de Comandos (`control + shift + p`) y escribe `editor` y selecciona la opción `Generate .editorconfig`. Este archivo nos permite especificar por ejemplo cuantos espacios tendran nuestros tabs para identar nuestro código.
+6. _OPTIONAL_ Agreguemos el archivo `.editorconfig`. Abre de nuevo la Paleta de Comandos (`control + shift + p`) y escribe `editor` y selecciona la opción `Generate .editorconfig`. Este archivo nos permite especificar por ejemplo cuantos espacios tendrán nuestros tabs para indentar nuestro código.
 7. _OPTIONAL_ Editemos el archivo `.editorconfig` y cambia el valor de `indent_size` a `2`
 8. Ok, ahora creemos las carpetas que usaremos para estructurar nuestro proyecto:
-9. Crea la carpeta `src` en la raiz del proyecto
-10. Dentro de la carpeta `src` creamos las siguientes carpetas vacias para ir estructurando nuestro proyecto:
+9. Crea la carpeta `src` en la raíz del proyecto
+10. Dentro de la carpeta `src` creamos las siguientes carpetas vacías para ir estructurando nuestro proyecto:
 
 - `models`
 - `controllers`
@@ -432,9 +432,9 @@ rules: {}
 npm run lint:show
 ```
 
-:speech_balloon: Nota: si tenemos errores se mostraran como resultado en la consola, donde se nos indicaran el archivo y la linea.
+:speech_balloon: Nota: si tenemos errores se mostraran como resultado en la consola, donde se nos indicaran el archivo y la línea.
 
-8. Si tenemos errores, intentemos arreglarlos automaticamente ejecutando el script:
+8. Si tenemos errores, intentemos arreglarlos automáticamente ejecutando el script:
 
 ```bash
 npm run lint:fix

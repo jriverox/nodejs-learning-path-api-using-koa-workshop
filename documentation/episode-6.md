@@ -34,7 +34,7 @@ docker run -d --name my-sonar -p 9000:9000 -p 9092:9092 sonarqube
 7. Ponle un nombre al proyecto, por ejemplo: `koa-workshop` y deja el mismo valor para Project key y haz clic en Set Up.
 8. Ahora para efectos de esta demostración elige la opción `Locally`
 9. Necesitamos un token, en `Provide a token` escribe un nombre, por ejemplo `developer1` y le das al botón `Generate`.
-10. Copia el token generado, porque lo vamos a necesitar en los pasos siguientes. Se te presentará un paso más pero omitelo.
+10. Copia el token generado, porque lo vamos a necesitar en los pasos siguientes. Se te presentará un paso más pero omítelo.
 
 ## Preparar el código del proyecto para que pueda usar SonarQube
 
@@ -44,7 +44,7 @@ docker run -d --name my-sonar -p 9000:9000 -p 9092:9092 sonarqube
 npm install -D sonarqube-scanner jest-sonar jest-sonar-reporter
 ```
 
-2. Crea el archivo `sonar-project.js` en la raìz del proyecto con el siguiente código:
+2. Crea el archivo `sonar-project.js` en la raíz del proyecto con el siguiente código:
 
 ```javascript
 const sonarqubeScanner = require('sonarqube-scanner');
@@ -68,8 +68,9 @@ sonarqubeScanner(
 ```
 
 3. Reemplaza el valor del token en este archivo por el token que guardaste.
-4. Revisa las configuraciones de las otras propiedades como: `sonar.sources`, `sonar.tests` las cuales deben coincidir con las carpetas del proyecto donde esta el codigo fuente y las pruebas. Si seguiste el episodio 5 al pie de la letra, solo deberás cambiar el token.
-5. Edita el archivo `jest.config.js` para incluir la configuración de las librerias que instalamos en el paso 1, el código completo es:
+4. Revisa las configuraciones de las otras propiedades como: `sonar.sources`, `sonar.tests` las cuales deben coincidir con las carpetas del proyecto donde esta el código fuente y las pruebas. Si seguiste el episodio 5 al pie de la letra, solo deberás cambiar el token.
+5. Edita el archivo `jest.config.js` para incluir la configuración de las librerías que instalamos en el paso 1, el código completo es:
+
 
 ```javascript
 module.exports = {
@@ -112,15 +113,15 @@ npm run sonar
 
 10. Si recibes un mensaje de `EXECUTION FAILURE` asegúrate de que hayas copiado el valor del `token` correctamente y que hayas creado el archivo `coverage/sonar-report.xml`
 11. Si todo salió bien verás el mensaje `EXECUTION SUCCESS`.
-12. Ahora ve al inicio de tu sonar (clic logo sonar) y haz clic en el link del proyecto.
-13. Desde la pestaña Overall Code, revisa las métricas, si en encuentras algún valor mator a cero, puedes hacer clic en el número para ver la lista de los bugs, estos bugs son los que deberías arreglar.
+12. Ahora ve al inicio de tu sonar (clic logo sonar) y haz clic en el enlace del proyecto.
+13. Desde la pestaña Overall Code, revisa las métricas, si en encuentras algún valor mayor a cero, puedes hacer clic en el número para ver la lista de los bugs, estos bugs son los que deberías arreglar.
 
 :eight_spoked_asterisk: Notas adicionales:
 
 Tal como te mencioné al principio de este episodio, esta es una simple demostración, no pretende profundizar en las configuraciones de Sonar ni tampoco en las mejores prácticas de su uso.
 
-Por ejemplo, normalmente en lugar de escanear nuestro código localmente (como lo hemos hecho hasta aquí), podríamos configuar para que se dispare desde un hook de Github. Otra opción sería desde el pipeline de despliegue automático (por ejemplo con jenkins) que podría generar un Docker con el código, ejecuta las pruebas unitarias. En ese contenedor tendría instalado el [Cliente de Sonar](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/) para usar el CLI y disparar el escaneo.
+Por ejemplo, normalmente en lugar de escanear nuestro código localmente (como lo hemos hecho hasta aquí), podríamos configurar para que se dispare desde un hook de Github. Otra opción sería desde el pipeline de despliegue automático (por ejemplo, con jenkins) que podría generar un Docker con el código, ejecuta las pruebas unitarias. En ese contenedor tendría instalado el [Cliente de Sonar](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/) para usar el CLI y disparar el escaneo.
 
-Espero te haya sido de utilidad, y si lo fué mucho agradecería que le dieras una estrella a este repositorio y tambien que los compartas con tus colegas.
+Espero te haya sido de utilidad, y si lo fue mucho agradecería que le dieras una estrella a este repositorio y también que los compartas con tus colegas.
 
-Hasta la próxima!!
+¡¡Hasta la próxima!!

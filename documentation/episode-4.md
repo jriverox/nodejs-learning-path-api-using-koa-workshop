@@ -1,14 +1,14 @@
 # Episodio 4: Manejo de Errores
 
-Para logear los errores usaremos la librería [winston](https://www.npmjs.com/package/winston), aunque podriamos usar cualquier otra librería esto de hecho no es lo más relevante, ya que lo importante es manejar de manera centralizada los errores e incluso disponer de nuetra lógica de negocio para gestionar los errores de manera consistentemente.
+Para logear los errores usaremos la librería [winston](https://www.npmjs.com/package/winston), aunque podríamos usar cualquier otra librería esto de hecho no es lo más relevante, ya que lo importante es manejar de manera centralizada los errores e incluso disponer de nuestra lógica de negocio para gestionar los errores de manera consistentemente.
 
-Aunque aqui muestro una manera muy sencilla donde centralzar los errores, hoy en día hay excelentes opciones que los proyectos profesionales suelen usar, por ejemplo usar Elastic Stack donde puedes almacenar los logs en Elasticsearch y visualizarlos con Kibana, otra muy buena opción el la dupla de Grafana y Prometheus.
+Aunque aquí muestro una manera muy sencilla donde centralizar los errores, hoy en día hay excelentes opciones que los proyectos profesionales suelen usar, por ejemplo, usar Elastic Stack donde puedes almacenar los logs en Elasticsearch y visualizarlos con Kibana, otra muy buena opción la dupla de Grafana y Prometheus.
 
 Te invito a darle un vistazo a este [excelente documento de mejores parcticas](https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices)
 
 ## Pasos para implementar
 
-1. Instalamos la libreria [winston](https://www.npmjs.com/package/winston)
+1. Instalamos la librería [winston](https://www.npmjs.com/package/winston)
 
 ```bash
 npm i winston
@@ -33,7 +33,7 @@ module.exports = async (ctx, next) => {
 
 4. Y dentro de esa carpeta creamos otra llamada `logging`.
 
-5. Craemos el archivo `app-error.js` dentro de `logging`. Esta es una clase que representara el error para toda la aplicación pero fijate que hereda de la clase base Error (...extends Error).
+5. Creamos el archivo `app-error.js` dentro de `logging`. Esta es una clase que representara el error para toda la aplicación, pero fíjate que hereda de la clase base Error (...extends Error).
 
 ```javascript
 /**
@@ -60,7 +60,7 @@ module.exports = class AppError extends Error {
 };
 ```
 
-6. Creamos ahora el archivo `common-errors.js` dentro de la carpeta `logging`. Aqui lo que estamos haciendo es tener un lugar donde mapear un nombre o descripcion para los statusCode http más comunes.
+6. Creamos ahora el archivo `common-errors.js` dentro de la carpeta `logging`. Aquí lo que estamos haciendo es tener un lugar donde mapear un nombre o descripción para los statusCode http más comunes.
 
 ```javascript
 module.exports = {
@@ -99,7 +99,7 @@ module.exports = {
 };
 ```
 
-7. Creemos el archivo `error-factory.js` dentro de la carpeta `logging` el cual nos permitirá crear errores de manera consistente. Porque lo llamamos factory?, pues porque nos permite crear una instancia de la clase AppError que creamos asignandole el nombre y statusCode que tenemos en common-error.js.
+7. Creemos el archivo `error-factory.js` dentro de la carpeta `logging` el cual nos permitirá crear errores de manera consistente. Porque lo llamamos factory?, pues porque nos permite crear una instancia de la clase AppError que creamos asignándole el nombre y statusCode que tenemos en common-error.js.
 
 ```javascript
 const AppError = require('./app-error');
@@ -173,7 +173,7 @@ module.exports = {
 };
 ```
 
-8. Atención!! ahora vamos a modificar el codigo de `middleware/schema-validator.js` que creamos en el episodio anterior con el fin de que cuando los valores del request no pasen las validaciones de los esquemas (creados en el episodio anterior) arrojen un error del tipo AppError pero invocando al factory del paso anterior, ves ahora porque creamos todo esto?
+8. Atención!! ahora vamos a modificar el código de `middleware/schema-validator.js` que creamos en el episodio anterior con el fin de que cuando los valores del request no pasen las validaciones de los esquemas (creados en el episodio anterior) arrojen un error del tipo AppError pero invocando al factory del paso anterior, ves ahora porque creamos todo esto?
 
 ```javascript
 const { UnknownError, InvalidInputError } = require('../utils/logging/error-factory');
@@ -222,7 +222,7 @@ const validateSchema = (schema) => (ctx, next) => {
 module.exports = validateSchema;
 ```
 
-9. Modifquemos el controlador `contacts.controller.js` ahora ya no validamos si los parametros son inválidos, porque el schema-validator que usamos en contacts.route lo hace por nosotros. Asimismo para que use el error factory en lugar de ctx.throw.
+9. Modifiquemos el controlador `contacts.controller.js` ahora ya no validamos si los parámetros son inválidos, porque el schema-validator que usamos en contacts.route lo hace por nosotros. Asimismo para que use el error factory en lugar de ctx.throw.
 
 ```javascript
 const contactModel = require('../models/contact.model');
@@ -262,7 +262,7 @@ module.exports.save = async (ctx) => {
 };
 ```
 
-10.  También ncesitamos modificar el controlador `auth.controller.js` para que use el `error-factory` en lugar de `ctx.throw`.
+10.  También necesitamos modificar el controlador `auth.controller.js` para que use el `error-factory` en lugar de `ctx.throw`.
 
 ```javascript
 const bcrypt = require('bcrypt');
@@ -314,7 +314,7 @@ module.exports.signIn = async (ctx) => {
   }
 };
 ```
-11.  Tambien vamos a modificar el archivo `middleware/auth.js` y reemplazar `_ctx.throw(401, 'Invalid Token')`_ por el uso del error-factory:
+11.  También vamos a modificar el archivo `middleware/auth.js` y reemplazar `_ctx.throw(401, 'Invalid Token')`_ por el uso del error-factory:
 
 ```javascript
 const jwt = require('jsonwebtoken');
@@ -339,7 +339,7 @@ module.exports.verifyToken = (ctx, next) => {
 };
 ```
 
-12. Creamos un nuevo archivo llamado `log-manager.js` dentro de la carpeta `logging`. Este solo es un wrapper de winston, ya que nos facilita que si cambiamos por otra libreria no impacte las otras partes de nuestro código.
+12. Creamos un nuevo archivo llamado `log-manager.js` dentro de la carpeta `logging`. Este solo es un wrapper de winston, ya que nos facilita que si cambiamos por otra librería no impacte las otras partes de nuestro código.
 
 ```javascript
 const winston = require('winston');
@@ -387,7 +387,7 @@ module.exports = class LogManager {
 };
 ```
 
-13. Agreguemos la configuración del logger winston en el archivo de configuración env.yaml, agregalo debajo de MONGODB_URL
+13. Agreguemos la configuración del logger winston en el archivo de configuración env.yaml, agrégalo debajo de MONGODB_URL
 
 ```yaml
 LOGGER:
@@ -398,7 +398,7 @@ LOGGER:
       PATH: 'error.log'
 ```
 
-14. Ahora debemos modificar el `server.js`, las lineas nuevas y modificadas tienen el comentario *linea agregada en este paso:*
+14. Ahora debemos modificar el `server.js`, las líneas nuevas y modificadas tienen el comentario *linea agregada en este paso:*
 
 ```javascript
 /* eslint-disable no-console */
@@ -456,4 +456,4 @@ mongoose
   });
 ```
 
-15. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o eliminalo del header del request. Aparte de tener un mejor manejo de los errores, si te das cuenta en la raiz del proyecto vas a encontrar un archivo `error.log` en el cual se logean los errores gracias a winston y todo el codigo que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrias tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerias que se conectan con plataformas como elasticsearch.
+15. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o elimínalo del header del request. Aparte de tener un mejor manejo de los errores, si te das cuenta en la raíz del proyecto vas a encontrar un archivo `error.log` en el cual se logean los errores gracias a winston y todo el código que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrías tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerías que se conectan con plataformas como elasticsearch.
