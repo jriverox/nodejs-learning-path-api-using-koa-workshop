@@ -1,0 +1,46 @@
+{
+  "name": "nodejs-learning-path-api-using-koa-workshop",
+  "version": "1.0.0",
+  "description": "Workshop contruyendo una API Rest con Node.js + Koa.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon ./src/server.js",
+    "lint:show": "eslint src/ -f stylish",
+    "lint:fix": "eslint --fix --ext .js ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop.git"
+  },
+  "keywords": [
+    "koa",
+    "mongodb",
+    "nodejs",
+    "api"
+  ],
+  "author": "Jhony Rivero",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop/issues"
+  },
+  "homepage": "https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop#readme",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.1.1",
+    "mongoose": "^6.2.7",
+    "yenv": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.0"
+  }
+}
