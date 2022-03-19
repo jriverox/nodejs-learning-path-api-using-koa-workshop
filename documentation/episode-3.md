@@ -6,7 +6,7 @@ La idea de este episodio es implementar un mecanismo de validación para los end
 - `POST /contacts/` que invoca al `contacts.controller.createContact` para crear un contacto.
 - `PUT /contacts/:index` que invoca al `contacts.controller.updateContact` para actualizar un contacto.
 
-Tal vez lo primero que pudieras pensar es implementar las validaciones con *if*, pero aquí es donde *joi* nos aporta algo interesante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
+Tal vez lo primero que pudieras pensar es implementar las validaciones con `if`, pero aquí es donde `joi` nos aporta algo interesante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
 
 ## Pasos para implementar
 
@@ -16,7 +16,7 @@ Tal vez lo primero que pudieras pensar es implementar las validaciones con *if*,
 npm i joi
 ```
 
-2. Creamos el archivo `schema-validator.js` dentro de la carpeta `middleware`.
+2. Creamos el archivo `schema-validator.js` dentro de la carpeta `middleware`. Este contiene la lógica para valdiar los datos que vengan en la solicitud http, aplicando las reglas que se definan en el esquema json al que está asociado.
 
 ```javascript
 /**
@@ -102,29 +102,31 @@ module.exports = {
 5. Ahora modificamos el archivo `routes/contacts.route.js` para indicarle a la aplicación que use el esquema `contacts.schema.js` y el middleware `schema-validator.js` creados anteriormente. Fíjate en los comentarios que empiezan con *codigo agregado en este paso:* o con *codigo modificado en este paso:* , el archivo final debe quedar así:
 
 ```javascript
-const KoaRouter = require('koa-router');
+const KoaRouter = require("koa-router");
 
-const router = new KoaRouter({ prefix: '/contacts' });
-const { getByIndex, save } = require('../controllers/contacts.controller');
+const router = new KoaRouter({ prefix: "/contacts" });
+const {
+  getContactByIndex,
+  updateContact,
+  createContact,
+} = require("../controllers/contacts.controller");
 
 const { verifyToken } = require('../middleware/auth');
-// codigo agregado en este paso. Importamos la funcion que hará de middleware para validar los esquemas
+// codigo agregado en este paso
 const validateSchema = require('../middleware/schema-validator');
-// codigo agregado en este paso. Importamos los 2 esquemas que hemos creados para los 2 endpoints de contacts
+// codigo agregado en este paso
 const { byIndexSchema, postSchema } = require('../schemas/contacts.schema');
-// codigo agregado en este paso: creamos una instancia del validador pasandole la parte del request que queremos validar en este caso (params) y el esquema apropiado. Recuerda que depende de la necesidad eso que aqui llamamos la parte de con contexto es en realidad donde vienen los datos en el request, por ejemplo: params, query (query string), body, header.
+// codigo agregado en este paso
 const byIndexValidator = validateSchema({ params: byIndexSchema });
-// codigo agregado en este paso: creamos una instancia del validador pasandole la parte del request que queremos validar en este caso (body) y el esquema apropiado
+// codigo agregado en este paso
 const postValidator = validateSchema({ body: postSchema });
-// codigo agregado en este paso: agregar byIndexValidator despues antes de llamar a la funcion del controller.
-// colocamos la funcion verifyToken para que se ejecute en cada request antes de invocar a la funcion del controllador
-// GET /contacts/29
-router.get('/byIndex', '/:index', verifyToken, byIndexValidator, getByIndex);
 
-// codigo agregado en este paso: agregar postValidator despues antes de llamar a la funcion del controller.
-// colocamos lafuncion verifyToken para que se ejecute en cada request antes de invocar a la funcion del controllador
-// POST
-router.post('/post', '/', verifyToken, postValidator, save);
+// GET /contacts/29
+router.get("/byIndex", "/:index", verifyToken, byIndexValidator, getContactByIndex);
+// POST /contacts/
+router.post("/post", "/", verifyToken, postValidator, createContact);
+// PUT /contacts/29
+router.put("/put", "/:index", verifyToken, byIndexValidator, postValidator, updateContact);
 
 module.exports = router;
 ```
@@ -132,3 +134,6 @@ module.exports = router;
 6. Listo tiempo de probar, inicia la aplicación y obtén un token de algún usuario que hayas creado, luego realiza por Postman haz un request al `GET localhost:3000/contacts/1` esperando se ejecute bien y ahora cambia el parametro 1 por un letra y veras que recibes un StatusCode 422 con el mensaje *Invalid URL Parameters - "index" must be a number*.
 
 7. Realiza también varias pruebas en el POST quitando por ejemplo un campo que hayamos establecido como requerido en el schema (postSchema). También prueba enviando un tipo de datos incorrecto por ejemplo un email invalido en el campo email.
+
+:eight_spoked_asterisk: Notas importantes:
+Fíjate que en paso 5, en cada uno de los routes definidos por ejemplo:  *router.put("/put", "/:index", verifyToken, byIndexValidator, postValidator, updateContact);* antes de ejecutar el método `updateContact`el cual es del controlador, se invocan los middleware `verifyToken`, `byIndexValidator` y `postValidator`.  byIndexValidator y postValidator se llaman para validar tanto los parámetros del path (ejemplo: contacts/1) y el body, por esta razón en este caso se invocan las dos valdiaciones de 2 difererentes esquemas, en el caso de los otros routes solo se ejecuta una sola validación de un esquema.
