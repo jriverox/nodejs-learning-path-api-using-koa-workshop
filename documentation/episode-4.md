@@ -29,7 +29,7 @@ module.exports = async (ctx, next) => {
 };
 ```
 
-3. Creamos una carpeta llamada `utils` dentro de src.
+3. Creamos una carpeta llamada `utils` dentro de `src`.
 
 4. Y dentro de esa carpeta creamos otra llamada `logging`.
 
@@ -176,6 +176,7 @@ module.exports = {
 8. Atención!! ahora vamos a modificar el código de `middleware/schema-validator.js` que creamos en el episodio anterior con el fin de que cuando los valores del request no pasen las validaciones de los esquemas (creados en el episodio anterior) arrojen un error del tipo AppError pero invocando al factory del paso anterior, ves ahora porque creamos todo esto?
 
 ```javascript
+// codigo agregado en este paso:
 const { UnknownError, InvalidInputError } = require('../utils/logging/error-factory');
 
 /**
@@ -225,7 +226,8 @@ module.exports = validateSchema;
 9. Modifiquemos el controlador `contacts.controller.js` ahora ya no validamos si los parámetros son inválidos, porque el schema-validator que usamos en contacts.route lo hace por nosotros. Asimismo para que use el error factory en lugar de ctx.throw.
 
 ```javascript
-const contactModel = require('../models/contact.model');
+const contactModel = require("../models/contact.model");
+// codigo agregado en este paso:
 const { NotFoundError } = require('../utils/logging/error-factory');
 
 /**
@@ -233,11 +235,10 @@ const { NotFoundError } = require('../utils/logging/error-factory');
  * @param {object} ctx: contexto de koa que contiene los parameteros de la solicitud, en este caso
  * desde el url de donde sacaremos el valor del parametro index (ctx.params.index)
  */
-module.exports.getByIndex = async (ctx) => {
-  const index =
-    ctx.params.index && !Number.isNaN(ctx.params.index) ? parseInt(ctx.params.index, 10) : 0;
+module.exports.getContactByIndex = async (ctx) => {
+  const { index } = ctx.params;
 
-  const filter = { index };
+  const filter = { index: parseInt(index, 10) };
   const data = await contactModel.findOne(filter);
   if (data) {
     ctx.body = data;
@@ -251,14 +252,32 @@ module.exports.getByIndex = async (ctx) => {
  *
  * @param {object} ctx: contexto de koa que contiene los parameteros
  * de la solicitud, en este caso desde el body,
- * obtendremos las propiedades de la persona a guardar a traves de ctx.request.body
+ * obtendremos las propiedades de la contacto a guardar a traves de ctx.request.body
  */
-module.exports.save = async (ctx) => {
+module.exports.updateContact = async (ctx) => {
+  const { index } = ctx.params;
   const contact = ctx.request.body;
-  const filter = { index: contact.index };
-  const options = { upsert: true };
-  await contactModel.updateOne(filter, contact, options);
+  const filter = { index: parseInt(index, 10) };
+  const options = { upsert: false };
+  const found = await contactModel.exists(filter);
+
+  if (!found) {
+    // codigo agregado en este paso:
+    throw NotFoundError(`No se ha encontrado la persona con el indice ${index}`);
+  } else {
+    await contactModel.updateOne(filter, contact, options);
+    ctx.body = contact;
+  }
+};
+
+module.exports.createContact = async (ctx) => {
+  const { index } = await contactModel.findOne({}, "index", {
+    sort: { index: -1 },
+  });
+  const contact = { ...ctx.request.body, index: index + 1 };
+  await contactModel.create(contact);
   ctx.body = contact;
+  ctx.response.status = 201;
 };
 ```
 
@@ -269,6 +288,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
 const userModel = require('../models/user.model');
+// codigo agregado en este paso:
 const { InvalidInputError, UnauthorizedError } = require('../utils/logging/error-factory');
 
 const env = yenv();
@@ -279,6 +299,7 @@ module.exports.signUp = async (ctx) => {
   const found = await userModel.findOne({ username });
 
   if (found) {
+    // codigo agregado en este paso:
     throw InvalidInputError(`Usuario ${username} ya existe`);
   } else {
     // crear un hash del password para no almacenarlo en texto plano en la bd
@@ -310,6 +331,7 @@ module.exports.signIn = async (ctx) => {
     expirationDate.setHours(expirationDate.getHours() + tokenExpirationHours);
     ctx.body = { access_token: token, token_expires: expirationDate };
   } else {
+    // codigo agregado en este paso:
     throw UnauthorizedError('Usuario o password incorectos');
   }
 };
@@ -401,11 +423,6 @@ LOGGER:
 14. Ahora debemos modificar el `server.js`, las líneas nuevas y modificadas tienen el comentario *linea agregada en este paso:*
 
 ```javascript
-/* eslint-disable no-console */
-/**
- * server.js
- * Responsable por inciar nuestra api, inicializa koa con todos sus middleware y tambien inicialzia la conexión de bd
- */
 const Koa = require('koa');
 const json = require('koa-json');
 const logger = require('koa-logger');
@@ -416,26 +433,23 @@ const mongoose = require('mongoose');
 const errorHandler = require('./middleware/error-handler');
 // linea agregada en este paso: referenciar a la clase LogManager
 const LogManager = require('./utils/logging/log-manager');
-
 // linea agregada en este paso: instanciar el LogManager
 const logManager = new LogManager();
+
 const env = yenv();
 const routes = require('./routes');
 
 // Inicializar nuestro servidor usando koa (similar a express)
 const app = new Koa();
-// Inicializar los middleware
 // linea agregada en este paso: agregar .use(apiError) para usar el middleware de manejo de errores en todas las solicitudes
 app.use(bodyParser()).use(json()).use(logger()).use(errorHandler);
 
-// eslint-disable-next-line array-callback-return
-routes.map((item) => {
+routes.forEach((item) => {
   app.use(item.routes()).use(item.allowedMethods());
 });
 
 // linea agregada en este paso: centralizar el manejo de errores con este evento
 app.on('error', (err, ctx) => {
-  console.error('logging error');
   const isOperationalError = logManager.error(err);
   if (!isOperationalError) {
     process.exit(1);
@@ -454,6 +468,10 @@ mongoose
   .catch((error) => {
     console.error(error);
   });
+
 ```
 
-15. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o elimínalo del header del request. Aparte de tener un mejor manejo de los errores, si te das cuenta en la raíz del proyecto vas a encontrar un archivo `error.log` en el cual se logean los errores gracias a winston y todo el código que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrías tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerías que se conectan con plataformas como elasticsearch.
+15. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o elimínalo del header del request.
+
+:speech_balloon: Notas Importantes:
+Aparte de tener un mejor manejo de los errores, si te das cuenta en la raíz del proyecto vas a encontrar un archivo `error.log` en el cual se logean los errores gracias a winston y todo el código que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrías tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerías que se conectan con plataformas como elasticsearch.
