@@ -8,10 +8,15 @@ module.exports = {
   ],
   reporters: [
     'default',
-    ['jest-sonar', {
-      outputDirectory: 'coverage',
-      outputName: 'test-reporter.xml'
-    }]
+    [
+      'jest-sonar', 
+      {
+        outputDirectory: 'coverage',
+        outputName: 'sonar-report.xml'
+      }
+    ]
   ],
-  testResultsProcessor:  "jest-sonar-reporter"
+  testResultsProcessor:  'jest-sonar-reporter',
+  coverageReporters: [`json`, `text`, `html`, `lcov`],
+  coverageDirectory: `coverage`,
 }
