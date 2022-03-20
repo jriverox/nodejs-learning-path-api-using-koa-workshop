@@ -259,7 +259,7 @@ module.exports.updateContact = async (ctx) => {
   const contact = ctx.request.body;
   const filter = { index: parseInt(index, 10) };
   const options = { upsert: false };
-  const found = await contactModel.exists(filter);
+  const found = await contactModel.findOne(filter);
 
   if (!found) {
     // codigo agregado en este paso:
