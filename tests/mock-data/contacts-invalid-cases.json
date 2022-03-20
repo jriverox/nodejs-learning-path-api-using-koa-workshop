@@ -1,0 +1,47 @@
+{
+  "contactInvalidEmail": {
+    "dateOfBirth": "1908-01-01",
+    "firstName": "Pepe",
+    "lastName": "Trueno",
+    "username": "pepetrueno",
+    "company": "Acme",
+    "email": "invalid email",
+    "phone": "+1 234 456 567",
+    "address": {
+      "street": "calle ugreen 234",
+      "city": "Miami",
+      "state": "Florida"
+    },
+    "jobPosition": "CEO",
+    "roles": ["guest", "admin"],
+    "active": true
+  },
+  "contactMissingNames": {
+    "dateOfBirth": "1908-01-01",
+    "company": "Acme",
+    "email": "invalid email",
+    "phone": "+1 234 456 567",
+    "address": {
+      "street": "calle ugreen 234",
+      "city": "Miami",
+      "state": "Florida"
+    },
+    "jobPosition": "CEO",
+    "roles": ["guest", "admin"],
+    "active": true
+  },
+  "contactInvalidDateOfBirth": {
+    "dateOfBirth": "invalid date",
+    "company": "Acme",
+    "email": "invalid email",
+    "phone": "+1 234 456 567",
+    "address": {
+      "street": "calle ugreen 234",
+      "city": "Miami",
+      "state": "Florida"
+    },
+    "jobPosition": "CEO",
+    "roles": ["guest", "admin"],
+    "active": true
+  }
+}

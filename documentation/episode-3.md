@@ -75,7 +75,6 @@ const byIndexSchema = Joi.object().keys({
 });
 
 const postSchema = Joi.object().keys({
-  index: Joi.number().min(1).required(),
   dateOfBirth: Joi.date().iso().required(),
   firstName: Joi.string().min(3).required(),
   lastName: Joi.string().min(3).required(),
