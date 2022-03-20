@@ -1,27 +1,27 @@
 {
   "name": "nodejs-learning-path-api-using-koa-workshop",
   "version": "1.0.0",
-  "description": "nodejs-learning-path-api-using-koa-worksho",
+  "description": "Workshop contruyendo una API Rest con Node.js + Koa.js",
   "main": "src/server.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development jest",
-    "test:unit": "cross-env NODE_ENV=development jest --verbose ./tests/unit --coverage",
-    "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage",
-    "test:coverage": "cross-env NODE_ENV=development jest --coverage",
-    "sonar": "node sonar-project.js",
     "start": "cross-env NODE_ENV=development nodemon ./src/server.js",
     "lint:show": "eslint src/ -f stylish",
-    "lint:fix": "eslint --fix --ext .js ."
+    "lint:fix": "eslint --fix --ext .js .",
+    "test": "cross-env NODE_ENV=development jest",
+    "test:unit": "cross-env NODE_ENV=development jest --verbose ./tests/unit",
+    "test:coverage": "cross-env NODE_ENV=development jest --coverage",
+    "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage",
+    "sonar": "node sonar-project.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jriverox/nodejs-learning-path-api-using-koa-workshop.git"
   },
   "keywords": [
-    "node.js",
-    "api-rest",
-    "koa.js",
-    "mongodb"
+    "koa",
+    "mongodb",
+    "nodejs",
+    "api"
   ],
   "author": "Jhony Rivero",
   "license": "MIT",
@@ -39,14 +39,14 @@
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.1.1",
-    "mongoose": "^6.2.4",
+    "mongoose": "^6.2.7",
     "winston": "^3.6.0",
     "yenv": "^3.0.1"
   },
   "devDependencies": {
     "@shopify/jest-koa-mocks": "^3.1.5",
     "@types/jest": "^27.4.1",
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
@@ -56,7 +56,7 @@
     "jest-sonar": "^0.2.12",
     "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "sonarqube-scanner": "^2.8.1",
     "supertest": "^6.2.2"
   }

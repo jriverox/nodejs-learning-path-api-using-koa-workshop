@@ -1,18 +1,18 @@
 # Episodio 1: Creando un API rest con Node.js, Koa.js y MongoDB
 
-Recuerda haber leìdo los requistos que necesitas instalar antes en la página [principal](../README.md#requisitos).
+Recuerda haber leído los requisitos que necesitas instalar antes en la página [principal](../README.md#requisitos).
 
 ## Pasos para implementar
 
 1. Creemos la carpeta raíz de nuestro proyecto, sugiero algo como `api-node-koa-workshop`
 2. Abramos la carpeta con Visual Studio Code
-3. Abre el terminal (puede ser de VS Code o el de tu preferencia pero debes dentro de la carpeta) e inicializa el nuevo proyecto npm, con el comando:
+3. Abre el terminal (puede ser de VS Code o el de tu preferencia, pero debes dentro de la carpeta) e inicializa el nuevo proyecto npm, con el comando:
 
 ```bash
 npm init -y
 ```
 
-4. Instalamos las principales dependencias que usaremos: `koa` y algunas de su ecosistema, `mongoose` para conectarnos a MongoDB, `yenv` para manejar la configuarción en un yaml y `cross-env` para facilitar el manejo de la variable de entorno *NODE_ENV*), ejecuta el siguiente comando:
+4. Instalamos las principales dependencias que usaremos: `koa` y algunas de su ecosistema, `mongoose` para conectarnos a MongoDB, `yenv` para manejar la configuración en un yaml y `cross-env` para facilitar el manejo de la variable de entorno _NODE_ENV_), ejecuta el siguiente comando:
 
 ```bash
 npm i koa koa-router koa-bodyparser koa-logger koa-json mongoose yenv cross-env
@@ -24,24 +24,24 @@ npm i koa koa-router koa-bodyparser koa-logger koa-json mongoose yenv cross-env
 npm i --save-dev nodemon
 ```
 
-6. _OPTIONAL_ Agreguemos el archivo `.editorconfig`. Abre de nuevo la Paleta de Comandos (`control + shift + p`) y escribe `editor` y selecciona la opción `Generate .editorconfig`. Este archivo nos permite especificar por ejemplo cuantos espacios tendran nuestros tabs para identar nuestro código.
-2. _OPTIONAL_ Editemos el archivo `.editorconfig` y cambia el valor de `indent_size` a `2`
-3.  Ok, ahora creemos las carpetas que usaremos para estructurar nuestro proyecto:
-4.  Crea la carpeta `src` en la raiz del proyecto
-5.  Dentro de la carpeta `src` creamos las siguientes carpetas vacias para ir estructurando nuestro proyecto:
+6. _OPTIONAL_ Agreguemos el archivo `.editorconfig`. Abre de nuevo la Paleta de Comandos (`control + shift + p`) y escribe `editor` y selecciona la opción `Generate .editorconfig`. Este archivo nos permite especificar por ejemplo cuantos espacios tendrán nuestros tabs para indentar nuestro código.
+7. _OPTIONAL_ Editemos el archivo `.editorconfig` y cambia el valor de `indent_size` a `2`
+8. Ok, ahora creemos las carpetas que usaremos para estructurar nuestro proyecto:
+9. Crea la carpeta `src` en la raíz del proyecto
+10. Dentro de la carpeta `src` creamos las siguientes carpetas vacías para ir estructurando nuestro proyecto:
 
 - `models`
 - `controllers`
 - `routes`
 
-13. Dentro de la carpeta `models` creamos `contact.model.js` con el siguiente código:
+11.  Dentro de la carpeta `models` creamos `contact.model.js` en el cual usaremos mongoose como repositorio para enviarle las peticiones a MongDB a la colección de contacts.
 
 ```javascript
 /**
  * contact.model.js
  * Nos permite gestionar los datos de la colección contacts de MongoDB
  */
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
@@ -104,18 +104,17 @@ const contactSchema = new Schema(
     },
   },
   {
-    collection: 'contacts',
-  },
+    collection: "contacts",
+  }
 );
 
-const contactModel = model('ContactModel', contactSchema);
+const contactModel = model("ContactModel", contactSchema);
 module.exports = contactModel;
 ```
 
-14. Dentro de la carpeta `controllers` creamos `contacts.controller.js` con el siguiente código:
-
+12.  Dentro de la carpeta `controllers` creamos `contacts.controller.js` el cual será el encargado de recibir las peticiones y aplicar la lógica de negocio y finalmente invocar a la capa de datos (modelos).
 ```javascript
-const contactModel = require('../models/contact.model');
+const contactModel = require("../models/contact.model");
 
 /**
  *
@@ -146,7 +145,7 @@ module.exports.updateContact = async (ctx) => {
   const contact = ctx.request.body;
   const filter = { index: parseInt(index, 10) };
   const options = { upsert: false };
-  const found = await contactModel.exists(filter);
+  const found = await contactModel.findOne(filter);
 
   if (!found) {
     ctx.throw(404, `No se ha encontrado la contacto con el indice ${index}`);
@@ -157,7 +156,9 @@ module.exports.updateContact = async (ctx) => {
 };
 
 module.exports.createContact = async (ctx) => {
-  const { index } = await contactModel.findOne({}, 'index', { sort: { index: -1 } });
+  const { index } = await contactModel.findOne({}, "index", {
+    sort: { index: -1 },
+  });
   const contact = { ...ctx.request.body, index: index + 1 };
   await contactModel.create(contact);
   ctx.body = contact;
@@ -165,43 +166,43 @@ module.exports.createContact = async (ctx) => {
 };
 ```
 
-15. Dentro de la carpeta `routes` creamos `contacts.route.js` con el siguiente código:
+13.  Dentro de la carpeta `routes` creamos `contacts.route.js`, este archivo contendrá las declaraciones de los endpoints o rutas para /contacts (GET, POST, PUT), recibe las peticiones directamente y ejecuta todos los middleware hasta invocar al controlador:
 
 ```javascript
-const KoaRouter = require('koa-router');
+const KoaRouter = require("koa-router");
 
-const router = new KoaRouter({ prefix: '/contacts' });
+const router = new KoaRouter({ prefix: "/contacts" });
 const {
   getContactByIndex,
   updateContact,
   createContact,
-} = require('../controllers/contacts.controller');
+} = require("../controllers/contacts.controller");
 
 // GET /contacts/29
-router.get('/byIndex', '/:index', getContactByIndex);
+router.get("/byIndex", "/:index", getContactByIndex);
 
 // POST /contacts/
-router.post('/post', '/', createContact);
+router.post("/post", "/", createContact);
 
 // PUT /contacts/29
-router.put('/put', '/:index', updateContact);
+router.put("/put", "/:index", updateContact);
 
 module.exports = router;
 ```
 
-16. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo `routes.js` dentro de `src` con el siguiente codigo:
+14. Ahora necesitamos un par de archivos más para poner andar el proyecto :walking:, creamos el archivo `routes.js` dentro de `src` con el siguiente codigo:
 
 ```javascript
 /**
  * Expone una coleccion de todos los routes de nuestra api,
  * a pesar de que aqui solo se se expone personRoute en la vida real debería exponer todos .
  */
-const personRoute = require('./routes/contacts.route');
+const personRoute = require("./routes/contacts.route");
 // aqui podria exponer todos los routes, ejemplo module.exports = [personRoute, route2]
 module.exports = [personRoute];
 ```
 
-17. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
+15. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
 
 ```javascript
 /* eslint-disable no-console */
@@ -209,15 +210,15 @@ module.exports = [personRoute];
  * server.js
  * Responsable por inciar nuestra api, inicializa koa con todos sus middleware y tambien inicialzia la conexión de bd
  */
-const Koa = require('koa');
-const json = require('koa-json');
-const logger = require('koa-logger');
-const bodyParser = require('koa-bodyparser');
-const yenv = require('yenv');
-const mongoose = require('mongoose');
+const Koa = require("koa");
+const json = require("koa-json");
+const logger = require("koa-logger");
+const bodyParser = require("koa-bodyparser");
+const yenv = require("yenv");
+const mongoose = require("mongoose");
 
 const env = yenv();
-const routes = require('./routes');
+const routes = require("./routes");
 
 // Inicializar nuestro servidor usando koa (similar a express)
 const app = new Koa();
@@ -241,26 +242,28 @@ mongoose
   });
 ```
 
-18. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
+16. Agreguemos el archivo de configuración `env.yaml` a la raiz del proyecto, con el siguiente código:
 
 ```yaml
 development:
   PORT: 3000
-  MONGODB_URL: 'mongodb://localhost:27017/contacts_demo'
+  MONGODB_URL: "mongodb://localhost:27017/contacts_demo"
 production:
   PORT: 3000
-  MONGODB_URL: 'mmongodb+srv://tu-usuario:tu-contraseña@cluster0-8hxu4.mongodb.net/contacts?retryWrites=true&w=majority'
+  MONGODB_URL: "mmongodb+srv://tu-usuario:tu-contraseña@cluster0-8hxu4.mongodb.net/contacts?retryWrites=true&w=majority"
 ```
 
 :speech_balloon: Notas: el archivo `env.yaml` contiene las variables de entorno que usará nuestro codigo, en este caso PORT y MONGODB_URL. Este env.yaml tiene 2 ambientes (development y production), para que nuestra aplicación corra, Nodejs y la libreria `yenv` necesitan un valor en la variable de entorno `NODE_ENV`, esta variable define el ambiente que usaremos (en este caso development). En los siguientes pasos agregaremos en la sección scripts del archivo package.json varios scrips, por ejemplo `start` alli contendrá un valor como: `cross-env NODE_ENV=development nodemon ./src/server.js` lo que significa que cross-env ya establece esta variable NODE_ENV a `development`.
 
 Otro punto importante acerca de la variable `MONGODB_URL` la cual contiene la cadena de conexión de la BD de MongoDB, el valor que deberás establecer dependerá de donde estes ejecutando la BD y si tiene credenciales o no. En el caso mostrado mas arriba (mongodb://localhost:27017/contacts_demo) no tiene ni password ni usuario, esto es una práctica insegura pero obviamente para fines de prueba está bien.
 
-19. Ahora agregaremos el nombre del archivo `env.yaml` al archivo `.gitignore`, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva `env.yaml`
+17. Ahora agregaremos el nombre del archivo `env.yaml` al archivo `.gitignore`, esto es una mejor práctica, ya que nunca debemos exponer credenciales o datos sensibles a repositorios publicos. Simplemente abre el archivo y agrega en una linea nueva `env.yaml`
 
 ## Probemos nuestra API
 
-Hasta aquí hemos implementado el código para construir nuestra api, pero y como :smiling_imp: puedo ponerla en marcha y probarla!!
+Hasta aquí hemos implementado el código para construir nuestra api, pero y como puedo ponerla en marcha y probarla!!
+
+:eight_spoked_asterisk: Nota: te recuerdo nuevamente que deberías disponer de una base de datos en MongoDB y que en la sección [Requisitos/Super Importante del Readme principal](../README.md#super-importante) encontrás como ejecutar Mongo en Docker y crear una base de datos, así como importar los datos desde un json de ejemplo que he puesto a disposición.
 
 1. Abrimos el archivo `package.json` que esta en la raiz y agrega dentro de la sección `scripts` la siguiente linea:
 
@@ -329,7 +332,6 @@ http://localhost:3000/contacts/1
     "city": "Coaldale",
     "state": "American Samoa"
   },
-  "index": 1,
   "dateOfBirth": "1994-10-26",
   "firstName": "Farrell",
   "lastName": "Farrell",
@@ -343,13 +345,19 @@ http://localhost:3000/contacts/1
 }
 ```
 
-:speech_balloon: Nota: si ya existe una persona con index usado entonce se actualizaran los datos, de lo contrario se creará, aqui puedes probar con diferentes valores.
+:speech_balloon: Notas importantes:
+
+- Cuando envias una petición ya sea por el navegador o por postman, el código de `server.js` crea una instancia de koa y la inicializa con una configuración en la cual se cargan los routes configurados en `routes/contacts.route.js`, fíjate que allí se ha configurado un `GET` un `POST` y un `PUT`.
+- Si la petición (verbo http + ruta + parametros) coiciden con una definición de algun route, entonces el route ejecuta los middleware (funciones) incluyendo la invocación del método del controlador que le coresponda. Por ejemplo *router.get("/byIndex", "/:index", getContactByIndex);* escucha in GET /contacts/ siempre y cuando le pasen un numero en el url (params) y lo manda al método `getContactByIndex` del controlador `contacts.controller.js`.
+- Luego el controlador ejecuta su lógica de negocios incluso invocando al método findOne del modelo `contacts.model.js` y este a su vez se conecta con Mongo para hacer el query.
+- También puede enviar un PUT similar como lo hiciste en el paso 6 pero en el url debes poner el numero del campo index, por ejemplo `PUT contacts/1` obviamente con su body.
 
 ## Configuración de ESlint y Prettier
+ESLint y prettier son herramientas que nos van a ayudar a tener orden en el código, ya que en javascript es muy fácil caer rapidamente en desorden y que el código se convierta en menos legible, esto incrementaría la deuda técnica. Esta desorden se conoce como `entropía`.
 
 ### EsLint
 
-1. Instalemos `eslint` como dependencia de desarrollo:
+1. Instalemos `eslint` como dependencia de desarrollo, si la aplciacón aún está en ejecución cancelala.
 
 ```bash
 npm i --save-dev eslint
@@ -388,13 +396,13 @@ npm i --save-dev prettier eslint-config-prettier eslint-plugin-prettier
 
 ```javascript
 module.exports = {
-  endOfLine: 'lf',
+  endOfLine: "lf",
   semi: true,
-  trailingComma: 'all',
+  trailingComma: "all",
   singleQuote: true,
   printWidth: 100,
   tabWidth: 2,
-  endOfLine: 'auto',
+  endOfLine: "auto",
 };
 ```
 
@@ -402,7 +410,6 @@ module.exports = {
 
 ```yaml
 env:
-  browser: true
   node: true
   commonjs: true
   es2021: true
@@ -421,7 +428,7 @@ rules: {}
 
 ```json
 "lint:show": "eslint src/ -f stylish",
-"lint:fix": "eslint --fix --ext .js .",
+"lint:fix": "eslint --fix --ext .js ."
 ```
 
 7. Revisemos si tenemos errores que no satisfagan las reglas de eslint, ejecutemos el comando:
@@ -430,9 +437,9 @@ rules: {}
 npm run lint:show
 ```
 
-:speech_balloon: Nota: si tenemos errores se mostraran como resultado en la consola, donde se nos indicaran el archivo y la linea.
+:speech_balloon: Nota: si tenemos errores se mostraran como resultado en la consola, donde se nos indicaran el archivo y la línea.
 
-8. Si tenemos errores, intentemos arreglarlos automaticamente ejecutando el script:
+8. Si tenemos errores, intentemos arreglarlos automáticamente ejecutando el script:
 
 ```bash
 npm run lint:fix

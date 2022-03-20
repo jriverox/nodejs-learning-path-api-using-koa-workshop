@@ -31,4 +31,4 @@ module.exports = {
     name: 'UnknownError',
     httpStatus: 500,
   },
-}
+};

@@ -7,4 +7,4 @@ module.exports = async (ctx, next) => {
     ctx.body = err.message;
     ctx.app.emit('error', err, ctx);
   }
-}
+};

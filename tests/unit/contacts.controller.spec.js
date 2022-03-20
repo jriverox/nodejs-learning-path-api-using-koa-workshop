@@ -1,5 +1,9 @@
 const { createMockContext } = require('@shopify/jest-koa-mocks');
-const { getContactByIndex, createContact, updateContact } = require('../../src/controllers/contacts.controller');
+const {
+  getContactByIndex,
+  createContact,
+  updateContact,
+} = require('../../src/controllers/contacts.controller');
 const contactModel = require('../../src/models/contact.model');
 const contactMockData = require('../mock-data/contact.json');
 
@@ -60,7 +64,7 @@ describe('Contacts Controller', () => {
       contactModel.create = jest.fn().mockResolvedValue({});
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: contactMockData
+        requestBody: contactMockData,
       });
 
       //Act
@@ -69,7 +73,6 @@ describe('Contacts Controller', () => {
       //Assert
       expect(ctx.status).toBe(201);
       expect(ctx.body.index).toBeGreaterThan(contact.index);
-
     });
   });
 
@@ -85,7 +88,7 @@ describe('Contacts Controller', () => {
       const ctx = createMockContext({
         method: 'PUT',
         customProperties: { params: { index: 1000 } },
-        requestBody: contactMockData
+        requestBody: contactMockData,
       });
 
       //Act
@@ -96,13 +99,14 @@ describe('Contacts Controller', () => {
     });
 
     it('When try update a contact with correct data but does not exist, should return statusCode 404', async () => {
-       //Arrange
+      //Arrange
       contactModel.findOne = jest.fn().mockResolvedValue(null);
       const ctx = createMockContext({
         method: 'PUT',
         customProperties: { params: { index: 1000 } },
-        requestBody: contactMockData
+        requestBody: contactMockData,
       });
+
       try {
         //Act
         await updateContact(ctx);

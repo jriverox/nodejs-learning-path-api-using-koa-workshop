@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const { createMockContext } = require('@shopify/jest-koa-mocks');
-const { signIn, signUp} = require('../../src/controllers/auth.controller');
+const { signIn, signUp } = require('../../src/controllers/auth.controller');
 const userModel = require('../../src/models/user.model');
 const user = require('../mock-data/user.json');
 
@@ -16,10 +16,10 @@ describe('Auth API', () => {
       //Arrange
       userModel.findOne = jest.fn().mockResolvedValue(null);
       userModel.create = jest.fn().mockResolvedValue({});
-      
+
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: user
+        requestBody: user,
       });
       //Act
       await signUp(ctx);
@@ -32,7 +32,7 @@ describe('Auth API', () => {
       userModel.findOne = jest.fn().mockResolvedValue(user);
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: user
+        requestBody: user,
       });
 
       try {
@@ -55,7 +55,7 @@ describe('Auth API', () => {
 
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: user
+        requestBody: user,
       });
       //Act
       await signIn(ctx);
@@ -70,7 +70,7 @@ describe('Auth API', () => {
       userModel.findOne = jest.fn().mockResolvedValue(null);
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: user
+        requestBody: user,
       });
 
       try {
@@ -91,11 +91,11 @@ describe('Auth API', () => {
 
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: user
+        requestBody: user,
       });
 
       try {
-         //Act
+        //Act
         await signIn(ctx);
       } catch (error) {
         //Assert

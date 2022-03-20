@@ -1,23 +1,12 @@
 # Episodio 5: Unit Tests + Integration Tests
 
-## Tabla de Contenido
-
-  - [Introducción](#introducción)
-  - [Referencias que te recomiendo leer](#referencias-que-te-recomiendo-leer)
-  - [Paquetes NPM que vamos a utilizar](#paquetes-npm-que-vamos-a-utilizar)
-  - [Pasos para implementar](#pasos-para-implementar)
-    - [Unit Tests](#unit-tests)
-    - [Integration Tests](#integration-tests)
-
-## Introducción
-
 En este episodio vamos a implementar dos tipos de pruebas las cuales son muy importantes para asegurar la calidad de un proyecto. El tema de unit testing e integration testing es muy importante de hecho hoy en día muchos proyectos lo tienen como parte del desarrollo y restringen integrar código si las pruebas no tienen la cobertura deseada.
 
 En este ejemplo hemos dejado las pruebas como uno de los últimos pasos, sin embargo, hay prácticas como [TDD](https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas) en las cuales la fase de testing es tan crucial que es una de las primeras etapas antes de implementar cualquier funcionalidad. De hecho el término `Test Driven Development` (TDD) en español debería traducirse como `Desarrollo orientado a Ejemplos`, porque cuando implementas los unit tests antes de implementar el código lo que haces es ir creando una idea de como será tu código.
 
 Resalto que en este workshop no estamos usando el enfoque TDD, no porque no me guste si no para simplificar las explicaciones.
 
-La idea de hacer unit test, es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de logica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrias tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en esos componentes.
+La idea de hacer unit test, es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de lógica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrías tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en esos componentes.
 
 :eight_spoked_asterisk: Antes de empezar a implementar es muy importante que entiendas algunas cosas base, fíjate en el siguiente código el cual es el tipo esqueleto que puedes encontrar usando algunos framwroks de testing de javascript.
 
@@ -64,9 +53,9 @@ describe('Contacts Controller', () => {
 });
 ```
 
-El código anterior muestra un ejemplo de como estructurar una prueba siguiendo el patron [Include 3 parts in each test](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/3-parts-in-name.md). Este enfoque habla de 3 partes: 1) `Unidad que estás probando` y la cual es objetivo de la prueba (componente) y feature. Luego en el `it` o `test`(depende del framework, en jest it es un alias de test asi que puedes usar cualquiera de los 2), en los it debes incluir la redacción del 2) `escenario` y la 3) `expectativa` de una manera bien legible y concreta, ejemplo: *When try to create a contact with correct data, should return statusCode 201*.
+El código anterior muestra un ejemplo de como estructurar una prueba siguiendo el patrón [Include 3 parts in each test](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/3-parts-in-name.md). Este enfoque habla de 3 partes: 1) `Unidad que estás probando` y la cual es objetivo de la prueba (componente) y feature. Luego en el `it` o `test` (depende del framework, en jest it es un alias de test así que puedes usar cualquiera de los 2), en los it debes incluir la redacción del 2) `escenario` y la 3) `expectativa` de una manera bien legible y concreta, ejemplo: *When try to create a contact with correct data, should return statusCode 201*.
 
-Dentro de cada `it` o `test`vamos a tener que implementar cada una de las pruebas, un ejemplo para el primer caso sería:
+Dentro de cada `it` o `test` vamos a tener que implementar cada una de las pruebas, un ejemplo para el primer caso sería:
 
 ```javascript
 //Test Implementation
@@ -89,11 +78,11 @@ expect(ctx.status).toBe(200);
 expect(ctx.body).toBe(contact);
 ```
 
-En la implementación anterior ves separaciones con los comentarios: `Arrange`, `Act` y `Assert` esto es otra práctica importante que NO debes omitir, de hecho es un patrón llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
+En la implementación anterior ves separaciones con los comentarios: `Arrange`, `Act` y `Assert` esto es otra práctica importante que NO debes omitir, de hecho, es un patrón llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
 
-A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de código de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de más alto nivel en la cual se deben consumir otras sub capas capas o componentes internos, incluso sin necesidad de crear un mock para componentes externos como librerías, apis o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
+A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de código de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de más alto nivel en la cual se deben consumir otras capas o componentes internos, incluso sin necesidad de crear un mock para componentes externos como librerías, APIs o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
 
-Te muestro dos imagenes que me parece que explican por si mismas la diferencia entre ambos tipos de tests:
+Te muestro dos imágenes que me parece que explican por si mismas la diferencia entre ambos tipos de tests:
 
 `Unit Test`
 
@@ -115,7 +104,7 @@ Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
 
 - [jest](https://jestjs.io/docs/getting-started). Framework de testing, incluye asserts y mocks.
 - [@types/jest](https://www.npmjs.com/package/@types/jest). Para contar con intellisense de Jest en VS Code.
-- [@shopify/jest-koa-mocks](https://www.npmjs.com/package/@shopify/jest-koa-mocks). Util crear mock del objeto context de Koa que contiene los datos del request y response http.
+- [@shopify/jest-koa-mocks](https://www.npmjs.com/package/@shopify/jest-koa-mocks). Útil crear mock del objeto context de Koa que contiene los datos del request y response http.
 - [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest). Nos ayuda a seguir las mejores prácticas (sintaxis) y anticipar errores comunes al escribir pruebas.
 - [supertest](https://www.npmjs.com/package/supertest). Necesario para las pruebas de integración porque nos permite levantar y ejecutar solicitudes http de nuestras routes (en el contexto de cada prueba).
 
@@ -129,9 +118,9 @@ Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
 npm i --save-dev jest @types/jest eslint-plugin-jest @shopify/jest-koa-mocks
 ```
 
-:eight_spoked_asterisk: Nota: estas librerias las instalamos en ambiente de desarrollo, fijate que muchas veces he usado `npm i -D paquete1` o `npm i --save-dev paquete1`. -D es el shorthand de --save-dev y simplemente significa que estos paquetes se incluiran dentro de la sección devDependencies del package.json y no dentro de dependencies. Cuando vayamos a desplegar podriamos usar el comando npm i --production o npm ci --production para evitar que nuestro desplegable contenga los paquetes de desarrollo.
+:eight_spoked_asterisk: Nota: estas librerías las instalamos en ambiente de desarrollo, fíjate que muchas veces he usado `npm i -D paquete1` o `npm i --save-dev paquete1`. -D es el shorthand de --save-dev y simplemente significa que estos paquetes se incluirán dentro de la sección devDependencies del package.json y no dentro de dependencias. Cuando vayamos a desplegar podríamos usar el comando npm i --production o npm ci --production para evitar que nuestro desplegable contenga los paquetes de desarrollo.
 
-2. Creamos la carpeta `tests` asegurate que este en la raíz del proyecto.
+2. Creamos la carpeta `tests` asegúrate que este en la raíz del proyecto.
 
 3. Dentro de la carpeta tests creamos la carpeta `mock-data`
 
@@ -228,11 +217,11 @@ npm i --save-dev jest @types/jest eslint-plugin-jest @shopify/jest-koa-mocks
 }
 ```
 
-:eight_spoked_asterisk: Nota: Todos estos json creados hasta aquí los usaremos en las pruebas, los centralizaamos en esta carpeta para evitar duplicar codigo innecesario.
+:eight_spoked_asterisk: Nota: Todos estos json creados hasta aquí los usaremos en las pruebas, los centralizamos en esta carpeta para evitar duplicar código innecesario.
 
 8. Creamos la carpeta `unit` dentro de la carpeta `tests` aqui agregaremos las pruebas unitarias (unit tests).
 
-9. Ahora Creamos entonces el archivo `contacts.controller.spec.js` dentro de `tests/unit`:
+9. Ahora creamos el archivo `contacts.controller.spec.js` dentro de `tests/unit`:
 
 ```javascript
 const { createMockContext } = require('@shopify/jest-koa-mocks');
@@ -550,7 +539,7 @@ describe('Token Verification', () => {
 });
 ```
 
-12. Finalmente implementamos la prueba sobre el schema-validator, ceramos el archivo `schema-validator.middleware.spec.js` con el código:
+12. Finalmente implementamos la prueba sobre el schema-validator, creamos el archivo `schema-validator.middleware.spec.js` con el código:
 
 ```javascript
 const { createMockContext } = require('@shopify/jest-koa-mocks');
@@ -710,7 +699,7 @@ module.exports = {
 };
 ```
 
-:eight_spoked_asterisk: Nota: En este archivo podemos establecer muchas opciones como donde estará nuestro reporte de cobertura, elementos a ignorar en la cobertura, plugins como sonaqube. Fíjate que hemos establecido `coveragePathIgnorePatterns` con 3 archivos que no nos interesa hacer pruebas unitarias ya que no tienen implementación importante. Algo importante es que node_modules se ignora por defecto, es decir, si quitas coveragePathIgnorePatterns se ignorará esa carpeta pero si lo establece explicitamente deberás incluirla.
+:eight_spoked_asterisk: Nota: En este archivo podemos establecer muchas opciones como donde estará nuestro reporte de cobertura, elementos a ignorar en la cobertura, plugins como sonaqube. Fíjate que hemos establecido `coveragePathIgnorePatterns` con 3 archivos que no nos interesa hacer pruebas unitarias ya que no tienen implementación importante. Algo importante es que node_modules se ignora por defecto, es decir, si quitas coveragePathIgnorePatterns se ignorará esa carpeta, pero si lo establece explícitamente deberás incluirla.
 
 14. Ahora editamos el archivo `package.json` y asegúrate que esté el siguiente código en los script:
 
@@ -749,13 +738,13 @@ npm run test
 npm run test:unit
 ```
 
-:eight_spoked_asterisk: Nota: esta versión lo que hace es ejecutar solo las pruebas (archivos *spec.js o *test.js) dentro de la carpeta `tests/unit`
+:eight_spoked_asterisk: Nota: esta versión lo que hace es ejecutar solo las pruebas (archivos *spec.js* o *test.js*) dentro de la carpeta `tests/unit`
 
 ```bash
 npm run test:coverage
 ```
 
-:eight_spoked_asterisk: Nota: esta versión ejecuta todas las pruebas mostrandote la cobertura.
+:eight_spoked_asterisk: Nota: esta versión ejecuta todas las pruebas mostrándote la cobertura.
 
 ### Integration Tests
 
@@ -767,7 +756,7 @@ Hasta aquí hemos implementado algunas pruebas unitarias. Ahora vamos a implemen
 npm i --save-dev supertest
 ```
 
-2. Creamos el archivo `app.js` dentro de la carpeta `src`. Con este cambio lo que vamos hacer es refactorizar el codigo de configuración e inicialización de la variable app que tenemos en el archivo `server.js`, con el fin de poder acceder a esa instancia sin necesidad de ejecutar su metod listen. Entonces el código debe quedar asi:
+2. Creamos el archivo `app.js` dentro de la carpeta `src`. Con este cambio lo que vamos a hacer es re factorizar el código de configuración e inicialización de la variable app que tenemos en el archivo `server.js`, con el fin de poder acceder a esa instancia sin necesidad de ejecutar su método listen. Entonces el código debe quedar así:
 
 ```javascript
 const Koa = require('koa');
@@ -1178,7 +1167,7 @@ describe('Auth API', () => {
  "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage"
 ```
 
-8. Ahora ejecutamos las pruebas, tenemos la opción de ejecutar solo las de integracion o toda la suite de pruebas:
+8. Ahora ejecutamos las pruebas, tenemos la opción de ejecutar solo las de integración o toda la suite de pruebas:
 
 ```bash
 npm run test:integration

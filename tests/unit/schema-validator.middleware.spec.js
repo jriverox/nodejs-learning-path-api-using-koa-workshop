@@ -28,16 +28,15 @@ describe('Contact Schema Validator', () => {
 
       //Assert
       expect(typeof result).toBe('function');
-
     });
 
     it('When pass an empty body, should thrown InvalidInputError', () => {
       //Arrange
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: {}
+        requestBody: {},
       });
-      
+
       try {
         //Act
         postValidator(ctx, () => () => {});
@@ -53,7 +52,7 @@ describe('Contact Schema Validator', () => {
       //Arrange
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: contactInvalidEmail
+        requestBody: contactInvalidEmail,
       });
 
       try {
@@ -72,7 +71,7 @@ describe('Contact Schema Validator', () => {
       //Arrange
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: contactMissingNames
+        requestBody: contactMissingNames,
       });
 
       try {
@@ -81,7 +80,9 @@ describe('Contact Schema Validator', () => {
       } catch (error) {
         //Assert
         expect(error.status).toBe(422);
-        expect(error.message).toEqual('Solicitud no válida: Invalid Request Body - \"firstName\" is required');
+        expect(error.message).toEqual(
+          'Solicitud no válida: Invalid Request Body - "firstName" is required',
+        );
         expect(error.isOperational).toBeTruthy();
       }
     });
@@ -90,7 +91,7 @@ describe('Contact Schema Validator', () => {
       //Arrange
       const ctx = createMockContext({
         method: 'POST',
-        requestBody: contactInvalidDateOfBirth
+        requestBody: contactInvalidDateOfBirth,
       });
 
       try {
@@ -99,17 +100,19 @@ describe('Contact Schema Validator', () => {
       } catch (error) {
         //Assert
         expect(error.status).toBe(422);
-        expect(error.message).toEqual('Solicitud no válida: Invalid Request Body - \"dateOfBirth\" must be in ISO 8601 date format');
+        expect(error.message).toEqual(
+          'Solicitud no válida: Invalid Request Body - "dateOfBirth" must be in ISO 8601 date format',
+        );
         expect(error.isOperational).toBeTruthy();
       }
     });
   });
-   
+
   describe('Get By Index Schema', () => {
     it('When pass a number as parameter, should execute next function successfully', () => {
       const ctx = createMockContext({
         method: 'GET',
-        customProperties: { params: { index: 1000 } }
+        customProperties: { params: { index: 1000 } },
       });
 
       const next = () => {};
@@ -121,14 +124,16 @@ describe('Contact Schema Validator', () => {
     it('When pass a parameter that not be a number, should thrown InvalidInputError', () => {
       const ctx = createMockContext({
         method: 'GET',
-        customProperties: { params: { index: 'xxxxxx' } }
+        customProperties: { params: { index: 'xxxxxx' } },
       });
 
       try {
         byIndexValidator(ctx, () => () => {});
       } catch (error) {
         expect(error.status).toBe(422);
-        expect(error.message).toEqual('Solicitud no válida: Invalid URL Parameters - \"index\" must be a number');
+        expect(error.message).toEqual(
+          'Solicitud no válida: Invalid URL Parameters - "index" must be a number',
+        );
         expect(error.isOperational).toBeTruthy();
       }
     });

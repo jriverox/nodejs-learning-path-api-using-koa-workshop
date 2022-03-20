@@ -17,7 +17,7 @@ describe('Token Verification', () => {
     //Assert
     expect(ctx.request.user).not.toBeNull();
   });
-  
+
   it('When pass an invalid token, should thrown UnauthorizedError', () => {
     //Arrange
     const ctx = createMockContext({

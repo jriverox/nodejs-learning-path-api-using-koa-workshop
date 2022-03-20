@@ -1,4 +1,3 @@
-
 const yenv = require('yenv');
 const mongoose = require('mongoose');
 const app = require('./app');

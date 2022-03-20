@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const byIndexSchema = Joi.object().keys({
-  index: Joi.number().min(1).required()
+  index: Joi.number().min(1).required(),
 });
 
 const postSchema = Joi.object().keys({
@@ -24,5 +24,5 @@ const postSchema = Joi.object().keys({
 
 module.exports = {
   byIndexSchema,
-  postSchema
+  postSchema,
 };

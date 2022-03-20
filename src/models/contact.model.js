@@ -2,7 +2,7 @@
  * contact.model.js
  * Nos permite gestionar los datos de la colección contacts de MongoDB
  */
- const mongoose = require('mongoose');
+ const mongoose = require("mongoose");
 
  const { Schema, model } = mongoose;
  
@@ -65,10 +65,9 @@
      },
    },
    {
-     collection: 'contacts',
-   },
+     collection: "contacts",
+   }
  );
  
- const contactModel = model('ContactModel', contactSchema);
+ const contactModel = model("ContactModel", contactSchema);
  module.exports = contactModel;
- 
