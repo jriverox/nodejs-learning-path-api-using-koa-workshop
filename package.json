@@ -10,7 +10,8 @@
     "test": "cross-env NODE_ENV=development jest",
     "test:unit": "cross-env NODE_ENV=development jest --verbose ./tests/unit",
     "test:coverage": "cross-env NODE_ENV=development jest --coverage",
-    "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage"
+    "test:integration": "cross-env NODE_ENV=development jest --verbose ./tests/integration --coverage",
+    "sonar": "node sonar-project.js"
   },
   "repository": {
     "type": "git",
@@ -52,8 +53,11 @@
     "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.5.1",
+    "jest-sonar": "^0.2.12",
+    "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.6.0",
+    "sonarqube-scanner": "^2.8.1",
     "supertest": "^6.2.2"
   }
 }

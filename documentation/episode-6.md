@@ -97,11 +97,11 @@ module.exports = {
 };
 ```
 
-6. Ahora busca la carpeta coverage y crea un nuevo archivo llamado `sonar-report.xml`, si la carpeta no existe, entonces ejecuta `npm run test:coverage`.
+6. Ahora busca la carpeta `coverage` y crea un nuevo archivo llamado `sonar-report.xml`, si la carpeta no existe, entonces ejecuta `npm run test:coverage`.
 7. Edita el archivo `package.json` para agregar un script (sección scripts) para poder ejecutar Sonar:
 
 ```json
- "sonar": "node sonar-project.js",
+ "sonar": "node sonar-project.js"
 ```
 
 8. Aseguarte que las pruebas se ejecutan satisfactoriamente y que tu Sonar este levantado.
