@@ -8,14 +8,14 @@
 
 - [Acerca de](#acerca-de)
 - [Introducción](#introducción)
-- [Explicación del Caso de Uso](#explicación-del-caso-de-uso)
-- [Ciclo de Vida de las Solicitudes HTTP en nuestra API](#ciclo-de-vida-de-las-solicitudes-http-en-nuestra-api)
+- [Explicación del caso de uso](#explicación-del-caso-de-uso)
+- [Ciclo de vida de las solicitudes HTTP en nuestra API](#ciclo-de-vida-de-las-solicitudes-http-en-nuestra-api)
 - [Requisitos](#requisitos)
-  - [Súper Importante](#súper-importante)
+  - [Súper importante](#súper-importante)
   - [Recomendado](#recomendado)
 - [Episodios](#episodios)
 - [Stack](#stack)
-- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Estructura del proyecto](#estructura-del-proyecto)
 
 ## Acerca de
 
@@ -33,11 +33,11 @@ Dividiremos este taller en `4 partes que llamaremos Episodios`, en cada uno agre
 
 Quieres saber el contenido de los episodios? ve a la sección [Episodios](#episodios)
 
-## Explicación del Caso de Uso
+## Explicación del caso de uso
 
 Esta API de ejemplo es muy simple, expondrá algunos métodos para poder obtener (GET) un contacto que tenemos en una base de datos de MongoDB. También nos permitirá crear nuevos contactos (POST) o actualizar sus datos (PUT).
 
-## Ciclo de Vida de las Solicitudes HTTP en nuestra API
+## Ciclo de vida de las solicitudes HTTP en nuestra API
 
 Cada vez que un usuario realiza una petición por ejemplo a <http://localhost:3000/contacts> ya sea que realiza un GET o un POST (con los parámetros adecuados), nuestra aplicación escucha a través de los enrutamientos (routes) que hemos definido y esto dispara todo el flujo de invocaciones necesarias para finalizar el procesamiento de cada solicitud. En la siguiente imagen se muestra como es el flujo de la petición que pasa entre los elementos más importantes de nuestro api.
 
@@ -46,7 +46,7 @@ Cada vez que un usuario realiza una petición por ejemplo a <http://localhost:30
 ## Requisitos
 
 Antes de empezar revisa que cumplas con los siguientes requisitos:
-### Súper Importante
+### Súper importante
 
 - [Node.js](https://nodejs.org/) puede ser la versión LTS o la actual
 - [Git](https://git-scm.com/)
@@ -92,7 +92,7 @@ Como se mencionó anteriormente la idea es implementar una API Rest para cubrir 
 - [supertest](https://github.com/visionmedia/supertest#readme) - Modulo que nos permite realizar pruebas de solicitudes http
 - [cross-env](https://github.com/kentcdodds/cross-env#readme) - Facilita establecer el valor de la variable de entorno NODE_ENV
 
-## Estructura del Proyecto
+## Estructura del proyecto
 
 ```
 nodejs-learning-path-api-using-koa-workshop
