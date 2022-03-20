@@ -1,4 +1,18 @@
-# Episodio 5: Unit Tests + Integration Tests
+# Episodio 5: Unit Tests + Integration Tests <!-- omit in toc -->
+
+## Contenido <!-- omit in toc -->
+
+- [Introducción](#introducción)
+  - [Estructura de un Test](#estructura-de-un-test)
+  - [Código de ejemplo de un escenario](#código-de-ejemplo-de-un-escenario)
+- [Unit Tests vs Integration Tests](#unit-tests-vs-integration-tests)
+- [Paquetes NPM que vamos a utilizar](#paquetes-npm-que-vamos-a-utilizar)
+- [Implementación](#implementación)
+  - [Unit Tests](#unit-tests)
+  - [Integration Tests](#integration-tests)
+- [Lectura recomendadas](#lectura-recomendadas)
+
+## Introducción
 
 En este episodio vamos a implementar dos tipos de pruebas las cuales son muy importantes para asegurar la calidad de un proyecto. El tema de unit testing e integration testing es muy importante de hecho hoy en día muchos proyectos lo tienen como parte del desarrollo y restringen integrar código si las pruebas no tienen la cobertura deseada.
 
@@ -8,7 +22,9 @@ Resalto que en este workshop no estamos usando el enfoque TDD, no porque no me g
 
 La idea de hacer unit test, es crear unas pruebas de los componentes (clases, funciones) más importantes a nivel de lógica de negocio. En nuestro caso serían los controller, pero en la vida real depende de la estructura que usen en tu proyecto, podrías tener clases o archivos que representen un servicio de dominio, y donde el controller o directamente los routes invoquen a estos servicios, si este fuera el caso entonces nos enfocaríamos en esos componentes.
 
-:eight_spoked_asterisk: Antes de empezar a implementar es muy importante que entiendas algunas cosas base, fíjate en el siguiente código el cual es el tipo esqueleto que puedes encontrar usando algunos framwroks de testing de javascript.
+### Estructura de un Test
+
+Antes de empezar a implementar es muy importante que entiendas algunas cosas base, fíjate en el siguiente código el cual es el tipo esqueleto que puedes encontrar usando algunos framwroks de testing de javascript.
 
 ```javascript
 //unit under test (component level)
@@ -57,6 +73,8 @@ El código anterior muestra un ejemplo de como estructurar una prueba siguiendo 
 
 Dentro de cada `it` o `test` vamos a tener que implementar cada una de las pruebas, un ejemplo para el primer caso sería:
 
+### Código de ejemplo de un escenario
+
 ```javascript
 //Test Implementation
 //Arrange
@@ -80,6 +98,8 @@ expect(ctx.body).toBe(contact);
 
 En la implementación anterior ves separaciones con los comentarios: `Arrange`, `Act` y `Assert` esto es otra práctica importante que NO debes omitir, de hecho, es un patrón llamado [AAA Pattern](https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/testingandquality/aaa.md).
 
+## Unit Tests vs Integration Tests
+
 A diferencia de las pruebas unitarias que buscan probar pequeñas unidades de código de manera aislada, las pruebas de integración se enfocan en una funcionalidad de mas alto nivel probando desde la capa de más alto nivel en la cual se deben consumir otras capas o componentes internos, incluso sin necesidad de crear un mock para componentes externos como librerías, APIs o bases de datos. Aunque en nuestro caso vamos a mockear algunas cosas internas como los modelos de mongoose para evitar depender de la base de datos.
 
 Te muestro dos imágenes que me parece que explican por si mismas la diferencia entre ambos tipos de tests:
@@ -92,14 +112,6 @@ Te muestro dos imágenes que me parece que explican por si mismas la diferencia 
 
 <img src="images/integration-test-simil.jpg" alt="integration-test" width="500"/>
 
-## Referencias que te recomiendo leer
-
-Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
-
-- [Testing And Overall Quality Practices](https://github.com/goldbergyoni/nodebestpractices?#4-testing-and-overall-quality-practices)
-- [A guide to unit testing in JavaScript](https://github.com/mawrkus/js-unit-testing-guide)
-- [Unit Testing Principles, Practices, and Patterns](https://www.amazon.com/-/es/Vladimir-Khorikov/dp/1617296279/ref=sr_1_2?__mk_es_US=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2PPMYW7D6KTJU&keywords=unit+testing+main&qid=1647628112&sprefix=unit+testing+principles%2Caps%2C153&sr=8-2)
-
 ## Paquetes NPM que vamos a utilizar
 
 - [jest](https://jestjs.io/docs/getting-started). Framework de testing, incluye asserts y mocks.
@@ -108,7 +120,7 @@ Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
 - [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest). Nos ayuda a seguir las mejores prácticas (sintaxis) y anticipar errores comunes al escribir pruebas.
 - [supertest](https://www.npmjs.com/package/supertest). Necesario para las pruebas de integración porque nos permite levantar y ejecutar solicitudes http de nuestras routes (en el contexto de cada prueba).
 
-## Pasos para implementar
+## Implementación
 
 ### Unit Tests
 
@@ -1178,3 +1190,11 @@ y si queremos ejecutar todo:
 ```bash
 npm run test:coverage
 ```
+
+## Lectura recomendadas
+
+Te voy a dejar por acá una lista de `Mejores Prácticas` que sugiero leer.
+
+- [Testing And Overall Quality Practices](https://github.com/goldbergyoni/nodebestpractices?#4-testing-and-overall-quality-practices)
+- [A guide to unit testing in JavaScript](https://github.com/mawrkus/js-unit-testing-guide)
+- [Unit Testing Principles, Practices, and Patterns](https://www.amazon.com/-/es/Vladimir-Khorikov/dp/1617296279/ref=sr_1_2?__mk_es_US=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2PPMYW7D6KTJU&keywords=unit+testing+main&qid=1647628112&sprefix=unit+testing+principles%2Caps%2C153&sr=8-2)

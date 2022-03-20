@@ -1,4 +1,12 @@
-# Episodio 4: Manejo de Errores
+# Episodio 4: Manejo de Errores <!-- omit in toc -->
+
+## Tabla de Contenido <!-- omit in toc -->
+
+- [Introducción](#introducción)
+- [Implementación](#implementación)
+- [Notas adicionales](#notas-adicionales)
+
+## Introducción
 
 Para logear los errores usaremos la librería [winston](https://www.npmjs.com/package/winston), aunque podríamos usar cualquier otra librería esto de hecho no es lo más relevante, ya que lo importante es manejar de manera centralizada los errores e incluso disponer de nuestra lógica de negocio para gestionar los errores de manera consistentemente.
 
@@ -6,7 +14,7 @@ Aunque aquí muestro una manera muy sencilla donde centralizar los errores, hoy 
 
 Te invito a darle un vistazo a este [excelente documento de mejores parcticas](https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices)
 
-## Pasos para implementar
+## Implementación
 
 1. Instalamos la librería [winston](https://www.npmjs.com/package/winston)
 
@@ -473,5 +481,6 @@ mongoose
 
 15. Hora de probar, iniciamos la aplicación y hagamos una solicitud cualquiera de los endpoints de contactos con un token incorrecto o vencido, o elimínalo del header del request.
 
-:speech_balloon: Notas Importantes:
+## Notas adicionales
+
 Aparte de tener un mejor manejo de los errores, si te das cuenta en la raíz del proyecto vas a encontrar un archivo `error.log` en el cual se logean los errores gracias a winston y todo el código que agregamos en este episodio. Como te dije anteriormente, en un proyecto profesional podrías tener este archivo y tener un proceso aparte que sincronice estos errores a un elasticsearch, cloudwatch o new relic. Incluso winston tiene otras librerías que se conectan con plataformas como elasticsearch.

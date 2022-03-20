@@ -1,4 +1,12 @@
-# Episodio 3: Validando los Requests
+# Episodio 3: Validando los Requests <!-- omit in toc -->
+
+## Contenido <!-- omit in toc -->
+
+- [Introducción](#introducción)
+- [Implementación](#implementación)
+- [Notas adicionales](#notas-adicionales)
+
+## Introducción
 
 La idea de este episodio es implementar un mecanismo de validación para los endpoints:
 
@@ -8,7 +16,7 @@ La idea de este episodio es implementar un mecanismo de validación para los end
 
 Tal vez lo primero que pudieras pensar es implementar las validaciones con `if`, pero aquí es donde `joi` nos aporta algo interesante ya que ofrece un mecanismo para definir "esquemas json" y poder validar los datos que vienen en los requests http (GET, POST, DELETE, etc).
 
-## Pasos para implementar
+## Implementación
 
 1. Instalamos la librería [joi](https://www.npmjs.com/package/joi)
 
@@ -134,5 +142,6 @@ module.exports = router;
 
 7. Realiza también varias pruebas en el POST quitando por ejemplo un campo que hayamos establecido como requerido en el schema (postSchema). También prueba enviando un tipo de datos incorrecto por ejemplo un email invalido en el campo email.
 
-:eight_spoked_asterisk: Notas importantes:
+## Notas adicionales
+
 Fíjate que en paso 5, en cada uno de los routes definidos por ejemplo:  *router.put("/put", "/:index", verifyToken, byIndexValidator, postValidator, updateContact);* antes de ejecutar el método `updateContact`el cual es del controlador, se invocan los middleware `verifyToken`, `byIndexValidator` y `postValidator`.  byIndexValidator y postValidator se llaman para validar tanto los parámetros del path (ejemplo: contacts/1) y el body, por esta razón en este caso se invocan las dos valdiaciones de 2 difererentes esquemas, en el caso de los otros routes solo se ejecuta una sola validación de un esquema.

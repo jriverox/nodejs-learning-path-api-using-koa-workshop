@@ -1,4 +1,14 @@
-# Episodio 6: Evaluando el Código usando SonaQube
+# Episodio 6: Evaluando el Código usando SonaQube <!-- omit in toc -->
+
+## Contenido <!-- omit in toc -->
+
+- [Introducción](#introducción)
+- [Antes de Empezar](#antes-de-empezar)
+- [Ejecutar SonarQube desde un contener Docker](#ejecutar-sonarqube-desde-un-contener-docker)
+- [Preparar el código del proyecto para que pueda usar SonarQube](#preparar-el-código-del-proyecto-para-que-pueda-usar-sonarqube)
+- [Notas adicionales](#notas-adicionales)
+
+## Introducción
 
 En el episodio anterior implementamos y ejecutamos las pruebas y configuramos la cobertura. Ahora en este episodio vamos a configurar [SonarQube](https://docs.sonarqube.org/latest/) la cual nos sirve para evaluar ciertas métricas de calidad de código como:
 
@@ -116,7 +126,8 @@ npm run sonar
 12. Ahora ve al inicio de tu sonar (clic logo sonar) y haz clic en el enlace del proyecto.
 13. Desde la pestaña Overall Code, revisa las métricas, si en encuentras algún valor mayor a cero, puedes hacer clic en el número para ver la lista de los bugs, estos bugs son los que deberías arreglar.
 
-:eight_spoked_asterisk: Notas adicionales:
+
+## Notas adicionales
 
 Tal como te mencioné al principio de este episodio, esta es una simple demostración, no pretende profundizar en las configuraciones de Sonar ni tampoco en las mejores prácticas de su uso.
 

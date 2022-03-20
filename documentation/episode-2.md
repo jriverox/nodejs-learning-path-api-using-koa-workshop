@@ -1,10 +1,19 @@
-# Episodio 2: Protegiendo el acceso del API
+# Episodio 2: Protegiendo el acceso del API <!-- omit in toc -->
+
+## Contenido <!-- omit in toc -->
+
+- [Introducción](#introducción)
+- [Implementación](#implementación)
+  - [Creación del usuario (SignUp)](#creación-del-usuario-signup)
+  - [Autenticación y manejo del Token](#autenticación-y-manejo-del-token)
+
+## Introducción
 
 En este episodio nos enfocaremos en proteger el acceso a los endpoints del API usando Json Web Token también conocido como [JWT](https://jwt.io/introduction). Para ello usaremos las librerías [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) y [bcrypt](https://www.npmjs.com/package/bcrypt).
 
-## Pasos para implementar
+## Implementación
 
-### Creacioón del Usuario (SignUp)
+### Creación del usuario (SignUp)
 
 1. Instalamos las librerías que vamos a necesitar. 
    - [bcrypt](https://www.npmjs.com/package/bcrypt). Para crear un hash del password del usuario y no almacenarlo en texto plano en la base de datos.
@@ -105,7 +114,7 @@ curl --location --request POST 'localhost:3000/auth/signup' \
 
 8. Si todo salió bien el usuario se debe haber creado. De hecho, la colección users se crea automáticamente, consulta los datos en Mongo, veras que el password se ha generado como un *hash*, tal como lo implementamos en `controllers/users.controller.js` función *signUp*.
 
-### Autenticación y Manejo del Token
+### Autenticación y manejo del Token
 
 Hasta aquí hemos creado todo el código para crear un usuario. Ahora vamos a implementar el método de autenticación y la generación del Token.
 

@@ -1,12 +1,11 @@
-<h1 align="center">Workshop contruyendo una API Rest con Node.js + Koa.js</h1>
+# Workshop contruyendo una API Rest con Node.js + Koa.js <!-- omit in toc -->
 
 <div align="center">
-    <img src="documentation/images/nodejs-rest-api.png"  width="100%">
+    <img src="documentation/images/nodejs-rest-api.png"  width="90%">
 </div>
 
-## Tabla de Contenido
+## Tabla de Contenido <!-- omit in toc -->
 
-- [Tabla de Contenido](#tabla-de-contenido)
 - [Acerca de](#acerca-de)
 - [Introducción](#introducción)
 - [Explicación del Caso de Uso](#explicación-del-caso-de-uso)
@@ -96,54 +95,55 @@ Como se mencionó anteriormente la idea es implementar una API Rest para cubrir 
 ## Estructura del Proyecto
 
 ```
-📦api-node-koa-workshop
-  📦src
-  ┣ 📂controllers
-  ┃ ┣ 📜auth.controller.js
-  ┃ ┗ 📜contacts.controller.js
-  ┣ 📂middleware
-  ┃ ┣ 📜auth.js
-  ┃ ┣ 📜error-handler.js
-  ┃ ┗ 📜schema-validator.js
-  ┣ 📂models
-  ┃ ┣ 📜contact.model.js
-  ┃ ┗ 📜user.model.js
-  ┣ 📂routes
-  ┃ ┣ 📜auth.route.js
-  ┃ ┗ 📜contacts.route.js
-  ┣ 📂schemas
-  ┃ ┗ 📜contacts.schema.js
-  ┣ 📂utils
-  ┃ ┗ 📂logging
-  ┃ ┃ ┣ 📜app-error.js
-  ┃ ┃ ┣ 📜common-errors.js
-  ┃ ┃ ┣ 📜error-factory.js
-  ┃ ┃ ┗ 📜log-manager.js
-  ┣ 📜app.js
-  ┣ 📜routes.js
-  ┗ 📜server.js
-  📦tests
-  ┣ 📂integration
-  ┃ ┣ 📜auth.spec.js
-  ┃ ┗ 📜contacts.spec.js
-  ┣ 📂mock-data
-  ┃ ┣ 📜contact.json
-  ┃ ┣ 📜contacts-invalid-cases.json
-  ┃ ┣ 📜token.json
-  ┃ ┗ 📜user.json
-  ┗ 📂unit
-  ┃ ┣ 📜auth.controller.spec.js
-  ┃ ┣ 📜auth.middleware.spec.js
-  ┃ ┣ 📜contacts.controller.spec.js
-  ┃ ┗ 📜schema-validator.middleware.spec.js
-  ┣ 📜.editorconfig
-  ┣ 📜.eslintrc.yml
-  ┣ 📜.gitignore
-  ┣ 📜.prettierrc.js
-  ┣ 📜LICENSE
-  ┣ 📜README.md
-  ┣ 📜env.yaml
-  ┣ 📜jest.config.js
-  ┣ 📜package-lock.json
-  ┣ 📜package.json
+nodejs-learning-path-api-using-koa-workshop
+├─ .editorconfig
+├─ .eslintrc.yml
+├─ .gitignore
+├─ .prettierrc.js
+├─ LICENSE
+├─ README.md
+├─ jest.config.js
+├─ package-lock.json
+├─ package.json
+├─ sonar-project.js
+├─ src
+│  ├─ app.js
+│  ├─ controllers
+│  │  ├─ auth.controller.js
+│  │  └─ contacts.controller.js
+│  ├─ middleware
+│  │  ├─ auth.js
+│  │  ├─ error-handler.js
+│  │  └─ schema-validator.js
+│  ├─ models
+│  │  ├─ contact.model.js
+│  │  └─ user.model.js
+│  ├─ routes
+│  │  ├─ auth.route.js
+│  │  └─ contacts.route.js
+│  ├─ routes.js
+│  ├─ schemas
+│  │  └─ contacts.schema.js
+│  ├─ server.js
+│  └─ utils
+│     └─ logging
+│        ├─ app-error.js
+│        ├─ common-errors.js
+│        ├─ error-factory.js
+│        └─ log-manager.js
+└─ tests
+   ├─ integration
+   │  ├─ auth.spec.js
+   │  └─ contacts.spec.js
+   ├─ mock-data
+   │  ├─ contact.json
+   │  ├─ contacts-invalid-cases.json
+   │  ├─ token.json
+   │  └─ user.json
+   └─ unit
+      ├─ auth.controller.spec.js
+      ├─ auth.middleware.spec.js
+      ├─ contacts.controller.spec.js
+      └─ schema-validator.middleware.spec.js
+
 ```

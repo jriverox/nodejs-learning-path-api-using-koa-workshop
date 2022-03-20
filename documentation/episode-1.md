@@ -1,8 +1,24 @@
-# Episodio 1: Creando un API rest con Node.js, Koa.js y MongoDB
+# Episodio 1: Creando un API rest con Node.js, Koa.js y MongoDB <!-- omit in toc -->
 
-Recuerda haber leído los requisitos que necesitas instalar antes en la página [principal](../README.md#requisitos).
+## Contenido <!-- omit in toc -->
 
-## Pasos para implementar
+- [Introducción](#introducción)
+- [Antes de empezar](#antes-de-empezar)
+- [Implementación](#implementación)
+- [Probemos nuestra API](#probemos-nuestra-api)
+- [Configuración de ESlint y Prettier](#configuración-de-eslint-y-prettier)
+  - [EsLint](#eslint)
+  - [Prettier](#prettier)
+
+## Introducción
+
+En este episodio construiremos un API rest muy simple que nos ayduará a entender las bases de un proyecto del mundo real. Como lo mencioné en el readme de este repositorio, usaremos Node.js, Koa.js y MongoDB (obviamente con el apoyo de algunas librerías). Ten en cuenta que comprender las bases nos facilitaran el camnimo si tenemos que usar cualquier otro framework http como Express.js, Fastify, Restify. Asímismo si tuvieras que usar cualquier otra base de datos como MySQL, SQL Server, Postgresql.
+
+## Antes de empezar
+
+Recuerda haber leído los `requisitos` que necesitas instalar antes en la página [principal](../README.md#requisitos).
+
+## Implementación
 
 1. Creemos la carpeta raíz de nuestro proyecto, sugiero algo como `api-node-koa-workshop`
 2. Abramos la carpeta con Visual Studio Code
