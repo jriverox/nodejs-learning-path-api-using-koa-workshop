@@ -57,9 +57,8 @@ npm i --save-dev nodemon
  * contact.model.js
  * Nos permite gestionar los datos de la colección contacts de MongoDB
  */
-const mongoose = require("mongoose");
 
-const { Schema, model } = mongoose;
+const { Schema, model } = require("mongoose");
 
 const contactSchema = new Schema(
   {
