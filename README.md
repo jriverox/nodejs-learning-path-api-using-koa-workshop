@@ -84,7 +84,6 @@ Como se mencionó anteriormente la idea es implementar una API Rest para cubrir 
 - [EsLint](https://eslint.org/) - ESLint es una herramienta para identificar e informar sobre ruptura de estándares encontrados en el código ECMAScript / JavaScript.
 - [Prettier](https://prettier.io/) - Formateador de código, que nos ayuda a mantener limpio y alienado a los estándares.
 - [joi](https://www.npmjs.com/package/joi) - Nos permite definir esquemas de validación, lo cual nos da la oportunidad de validar los parámetros que recibamos en las solicitudes http.
-- [swagger2](https://github.com/carlansley/swagger2#readme) - Lo usaremos para cargar la documentación de nuestra api
 - [winston](https://github.com/winstonjs/winston#readme) - Un logger poderoso y popular en node.js
 - [yenv](https://github.com/jeffijoe/yenv#readme) - Nos permite manejar variables de entorno desde un archivo YAML
 - [jest](https://github.com/facebook/jestt) - Un framework muy popular para Testing
