@@ -29,7 +29,7 @@ En este Workshop está dirigido a desarrolladores que quieren aprender o reforza
 
 Por si aun no conoces Koa.js, te cuento que se trata de un web framework es decir es una alternativa mas ligera a [Express.js](https://expressjs.com/es/) (incluso construido por el mismo team de Express).
 
-Dividiremos este taller en `4 partes que llamaremos Episodios`, en cada uno agregaremos algún complemento que nos ayudará a entender cómo nuestra API irá evolucionando con el fin de añadirle funcionalidades técnicas que vas a necesitar en el mundo real.
+Dividiremos este taller en `6 partes que llamaremos Episodios`, en cada uno agregaremos algún complemento que nos ayudará a entender cómo nuestra API irá evolucionando con el fin de añadirle funcionalidades técnicas que vas a necesitar en el mundo real.
 
 Quieres saber el contenido de los episodios? ve a la sección [Episodios](#episodios)
 
@@ -51,10 +51,7 @@ Antes de empezar revisa que cumplas con los siguientes requisitos:
 - [Node.js](https://nodejs.org/) puede ser la versión LTS o la actual
 - [Git](https://git-scm.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
-- Acceso a una base de datos MongoDB en caso de que no tengas una, [este link te ayudará a crearla en Atlas o Docker](https://github.com/jriverox/data-sample-resources#mongodb)
-- Cargar la data de ejemplo en tu base de datos MongoDB
-  - [Descarga el json con la data de ejemplo](https://github.com/jriverox/data-sample-resources#contactos-esquema-demo)
-  - [Carga la data del json en una BD usando Compass](https://github.com/jriverox/data-sample-resources#usando-compass)
+- Acceso a una base de datos MongoDB en caso de que no tengas una, [este link te ayudará a crear una BD Docker](https://github.com/jriverox/data-sample-resources/blob/main/README.md)
 ### Recomendado
 
 - Extensión de VS Code [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
