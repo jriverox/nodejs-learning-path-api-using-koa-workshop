@@ -57,9 +57,8 @@ npm i --save-dev nodemon
  * contact.model.js
  * Nos permite gestionar los datos de la colección contacts de MongoDB
  */
-const mongoose = require("mongoose");
 
-const { Schema, model } = mongoose;
+const { Schema, model } = require("mongoose");
 
 const contactSchema = new Schema(
   {
@@ -213,9 +212,9 @@ module.exports = router;
  * Expone una coleccion de todos los routes de nuestra api,
  * a pesar de que aqui solo se se expone personRoute en la vida real debería exponer todos .
  */
-const personRoute = require("./routes/contacts.route");
+const contactRoute = require("./routes/contacts.route");
 // aqui podria exponer todos los routes, ejemplo module.exports = [personRoute, route2]
-module.exports = [personRoute];
+module.exports = [contactRoute];
 ```
 
 15. Ahora debemos crear el archivo responsable por inicial la aplicación, creamos el archivo `server.js` dentro de `src`
