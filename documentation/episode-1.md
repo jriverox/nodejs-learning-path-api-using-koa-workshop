@@ -16,7 +16,7 @@ En este episodio construiremos un API rest muy simple que nos ayduará a entende
 
 ## Antes de empezar
 
-Recuerda haber leído los `requisitos` que necesitas instalar antes en la página [principal](../README.md#requisitos).
+Recuerda que debes disponer de una base de datos en Mongo, tal como se menciona en los requsitos. Si aún no lo has hecho vista <https://github.com/jriverox/data-sample-mongo/blob/main/README.md>
 
 ## Implementación
 

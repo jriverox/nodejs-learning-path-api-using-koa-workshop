@@ -51,7 +51,7 @@ Antes de empezar revisa que cumplas con los siguientes requisitos:
 - [Node.js](https://nodejs.org/) puede ser la versión LTS o la actual
 - [Git](https://git-scm.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
-- Acceso a una base de datos MongoDB en caso de que no tengas una, [este link te ayudará a crear una BD Docker](https://github.com/jriverox/data-sample-resources/blob/main/README.md)
+- Acceso a una base de datos MongoDB en caso de que no tengas una, [este link te ayudará a crear una BD Docker](https://github.com/jriverox/data-sample-mongo/blob/main/README.md)
 ### Recomendado
 
 - Extensión de VS Code [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
