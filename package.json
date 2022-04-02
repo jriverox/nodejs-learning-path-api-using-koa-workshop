@@ -40,6 +40,7 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^10.1.1",
     "mongoose": "^6.2.7",
+    "serverless-http": "^2.7.0",
     "winston": "^3.6.0",
     "yenv": "^3.0.1"
   },

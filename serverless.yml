@@ -1,0 +1,16 @@
+service: aws-node-express-dynamodb-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    NODE_ENV: development
+
+functions:
+  api:
+    handler: src/lambda.handler
+    events:
+      - httpApi: '*'
+
+
